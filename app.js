@@ -4006,7 +4006,7 @@ function showFontiTab(){
 const STATIC_I18N = {
   /*COLOPHON*/
   "i18n-colo-h3": "How to cite, reuse and correct this site",
-  "i18n-colo-cite": "<b>Citation</b> &mdash; Luca Bertolani Azeredo, <i>Italians in Ireland: A Prosopographical Database, 1850&ndash;2026</i>, __BASE_URL__ (accessed <span class=\"colDate\"></span>).",
+  "i18n-colo-cite": "<b>Citation</b> &mdash; Luca Bertolani Azeredo, <i>Italians in Ireland: A Prosopographical Database, 1850&ndash;2026</i>, https://italians-in-ireland.github.io (accessed <span class=\"colDate\"></span>).",
   "i18n-colo-living": "<b>Living people</b> &mdash; The database is above all a record of lives that have ended, but some profiles reach into recent decades and may concern people who are still alive or who died recently. The information comes from public sources: censuses open to consultation, civil registration records, obituaries and gravestones. If you appear in a profile, or a relative of yours does, and you would like something corrected or removed, <a href=\"https://irishhistorians.ie/members/lucaba/\" target=\"_blank\" rel=\"noopener\">write to me</a> and I will see to it.",
   "i18n-colo-lic": "<b>Licence</b> &mdash; The texts and genealogical reconstructions on this site are released under a <a href=\"https://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\" rel=\"noopener\">Creative Commons BY-NC 4.0</a> licence: you may reuse them for non-commercial purposes, citing the author and the site. The photographs are excluded from the licence and remain with their owners: reproducing them requires permission. The original records cited (censuses, civil registration) are in the public domain and remain available at the sources linked from every profile.",
   /*END COLOPHON*/
