@@ -1,0 +1,4 @@
+# file temporanei lasciati da copie interrotte (rsync)
+.*.[0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z][0-9a-zA-Z]
+# backup del consolidamento
+*.bak-harden

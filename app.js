@@ -768,7 +768,7 @@ function createMultiSelect(root, allOptions, opts){
       html += '<div class="mselOpt mselAction" data-action="clear">&times; Deseleziona tutto</div>';
     }
     html += matches.length ? matches.map(o=>'<label class="mselOpt'+(state.selected.has(o)?' sel':'')+'"><input type="checkbox" data-v="'+esc(o)+'"'+(state.selected.has(o)?' checked':'')+'>'+esc(label(o))+'</label>').join("")
-      : '<div class="mselOpt" style="color:#8a7a63;cursor:default">Nessun risultato</div>';
+      : '<div class="mselOpt" style="color:#776955;cursor:default">Nessun risultato</div>';
     dropEl.innerHTML = html;
     if(opts.allowClearAll){
       const clearEl = dropEl.querySelector('.mselAction[data-action="clear"]');
@@ -1108,7 +1108,7 @@ function renderGenericTree(containerEl, positions, edges, opts){
   const unitW = opts.unitW!=null ? opts.unitW : TREE_UNIT_W;
   const genH = opts.genH!=null ? opts.genH : TREE_GEN_H;
   const keys = Object.keys(positions);
-  if(!keys.length){ containerEl.innerHTML = "<p style='padding:20px;font-size:13px;color:#8a7a63'>Nessun dato da mostrare.</p>"; containerEl.style.width=""; containerEl.style.height=""; return; }
+  if(!keys.length){ containerEl.innerHTML = "<p style='padding:20px;font-size:13px;color:#776955'>Nessun dato da mostrare.</p>"; containerEl.style.width=""; containerEl.style.height=""; return; }
   const px = k=>positions[k].x*unitW;
   const py = k=>positions[k].gen*genH;
   const infoOf = {}, layoutOf = {};
@@ -1239,7 +1239,7 @@ function renderTree(){
   const inner=document.getElementById("treeInner");
   if(scope==="person"){
     const sel = treePersonWidget ? treePersonWidget.selected : [];
-    if(!sel.length){ inner.innerHTML="<p style='padding:20px;font-size:13px;color:#8a7a63'>"+TT("Choose a person to see their tree.","Scegli una persona per vedere il suo albero.")+"</p>"; inner.style.width=""; inner.style.height=""; }
+    if(!sel.length){ inner.innerHTML="<p style='padding:20px;font-size:13px;color:#776955'>"+TT("Choose a person to see their tree.","Scegli una persona per vedere il suo albero.")+"</p>"; inner.style.width=""; inner.style.height=""; }
     else {
       const t = buildPersonTree(sel[0]);
       renderGenericTree(inner, t.nodes, t.edges, {labelFor:personLabelFor});
@@ -1247,7 +1247,7 @@ function renderTree(){
   } else if(scope==="family"){
     const famName=document.getElementById("treeFamilySel").value;
     const statsEl = document.getElementById("treeFamilyStats");
-    if(!famName){ inner.innerHTML="<p style='padding:20px;font-size:13px;color:#8a7a63'>"+TT("Choose a family.","Scegli una famiglia.")+"</p>"; inner.style.width=""; inner.style.height=""; if(statsEl) statsEl.textContent=""; }
+    if(!famName){ inner.innerHTML="<p style='padding:20px;font-size:13px;color:#776955'>"+TT("Choose a family.","Scegli una famiglia.")+"</p>"; inner.style.width=""; inner.style.height=""; if(statsEl) statsEl.textContent=""; }
     else {
       const t = buildFamilyTree(famName, 6);
       renderGenericTree(inner, t.nodes, t.edges, {labelFor:personLabelFor});
@@ -1324,7 +1324,7 @@ function renderList(){
     const photoFn = p.photos && p.photos.length ? p.photos[0] : null;
     const photoSrc = photoFn ? PHOTOS[photoFn] : null;
     const thumb = photoSrc
-      ? '<img src="'+photoSrc+'" loading="lazy" style="width:38px;height:38px;object-fit:cover;border-radius:3px;border:1px solid var(--line);flex:0 0 auto">'
+      ? '<img src="'+photoSrc+'" alt="" loading="lazy" style="width:38px;height:38px;object-fit:cover;border-radius:3px;border:1px solid var(--line);flex:0 0 auto">'
       : '<div style="width:38px;height:38px;border-radius:3px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:19px;color:#fff;background:'+(p.sex==="M"?"#3d6ea5":(p.sex==="F"?"#c15f8a":"#8a8a8a"))+'">'+(p.sex==="M"?"&#9794;&#65039;":(p.sex==="F"?"&#9792;&#65039;":"?"))+'</div>';
     return '<div class="pcard" onclick="openPerson(\''+k.replace(/'/g,"\\'")+'\')" style="display:flex;align-items:center;gap:10px">'+thumb+'<div style="min-width:0"><b>'+esc(k)+'</b><div class="meta">'+
       (p.born?esc(p.born):"")+(p.events.length? " &middot; "+p.events.length+" events":"")+'</div></div></div>';
@@ -1553,7 +1553,7 @@ function initLocations(){
     "Every place mentioned in the profiles has its own record, generated from the Obsidian notes in <code>Locations\\</code>: coordinates live there and only there. Filter by country, county or town, then open a place to see it on the map with every person and event recorded at that address.",
     "Ogni luogo citato nei profili ha una sua scheda, generata dalle note Obsidian in <code>Locations\\</code>: le coordinate vivono li e solo li. Filtra per nazione, contea o citta, poi apri un luogo per vederlo in mappa con tutte le persone e gli eventi registrati a quell'indirizzo.");
   document.getElementById("locMissLbl").textContent = TT("only without coordinates", "solo senza coordinate");
-  document.getElementById("locQ").placeholder = TT("search an address", "cerca un indirizzo");
+  document.getElementById("locQ").placeholder = TT("Search for an address", "Cerca un indirizzo");
   ["locCountry", "locRegion", "locCity"].forEach(function(id){
     document.getElementById(id).onchange = function(){ if (id === "locCountry") { document.getElementById("locRegion").value = ""; document.getElementById("locCity").value = ""; } if (id === "locRegion") { document.getElementById("locCity").value = ""; } closeLoc(); locRender(); };
   });
@@ -1569,7 +1569,7 @@ window.openPerson=function(key){
   const p=DATA[key]; if(!p) return;
   const el=document.getElementById("pmodal");
   let h='<button id="pmClose" onclick="closePerson()">&times;</button>';
-  h+='<h2>'+esc(p.name)+(p.life?' <span style="font-weight:normal;color:#8a7a63">('+esc(p.life)+')</span>':"")+'</h2>';
+  h+='<h2>'+esc(p.name)+(p.life?' <span style="font-weight:normal;color:#776955">('+esc(p.life)+')</span>':"")+'</h2>';
   h+='<div style="margin:4px 0 8px 0"><span class="chip">'+esc(p.fam)+'</span>'+(p.mfam||[]).map(f=>'<span class="chip">in '+esc(f)+'</span>').join("")+(p.sex?'<span class="chip">'+(p.sex==="M"?"male":"female")+'</span>':"")+'</div>';
   const rel=[];
   if(p.father) rel.push("<b>Father:</b> "+plink(p.father));
@@ -1582,7 +1582,7 @@ window.openPerson=function(key){
   if(p.forte) h+='<div class="fortelink"><a class="pl" href="'+esc(p.forte)+'" target="_blank">'+TT("Forte Project","Progetto Forte")+' &#8599;</a></div>';
   if(p.photos && p.photos.length){
     h+='<h3 class="sec">'+TT("Photographs","Fotografie")+'</h3><div class="photogal">'+
-      p.photos.map(fn=>{ const src=PHOTOS[fn]||""; return '<img src="'+src+'" loading="lazy" onclick="openLightbox(\''+fn.replace(/'/g,"\\'")+'\')">'; }).join("")+
+      p.photos.map(fn=>{ const src=PHOTOS[fn]||""; return '<img src="'+src+'" alt="'+esc(TT("Photograph of ","Fotografia di ")+(p.name||""))+'" loading="lazy" onclick="openLightbox(\''+fn.replace(/'/g,"\\'")+'\')">'; }).join("")+
       '</div>';
   }
   if(p.events.some(e=>e.lat!==null)) h+='<div id="pmap"></div>';
@@ -1644,6 +1644,13 @@ window.openPerson=function(key){
 window.openLightbox=function(fn){
   const src=PHOTOS[fn]; if(!src) return;
   document.getElementById("lightboxImg").src=src;
+  /*LBALT*/
+  try {
+    var __g = [].slice.call(document.querySelectorAll(".photogal img"));
+    var __m = __g.filter(function(x){ return (x.getAttribute("onclick")||"").indexOf(fn) >= 0; })[0];
+    document.getElementById("lightboxImg").alt = __m ? (__m.getAttribute("alt")||"") : "";
+  } catch(e){}
+  /*END LBALT*/
   document.getElementById("lightbox").style.display="flex";
 };
 window.closePerson=function(){
@@ -1906,7 +1913,7 @@ window.openFamily=function(f){
   famModalSortState = {key:"cognome", dir:"asc"};
   const noteHtml = FAMILY_NOTES[f];
   let h='<button id="pmClose" onclick="closePerson()">&times;</button>';
-  h+='<h2>'+esc(f)+' <span style="font-weight:normal;color:#8a7a63">('+rows.length+' '+TT("people","persone")+')</span></h2>';
+  h+='<h2>'+esc(f)+' <span style="font-weight:normal;color:#776955">('+rows.length+' '+TT("people","persone")+')</span></h2>';
   h+='<div style="margin:4px 0 8px 0"><a class="pl" onclick="gotoFam(\''+f.replace(/'/g,"\\'")+'\')">'+TT("View members in the People tab","Vedi i membri nella scheda Persone")+' &rarr;</a></div>';
   if(noteHtml){
     h+='<h3 class="sec">'+TT("Family history","Storia della famiglia")+'</h3><div class="fnote">'+noteHtml+'</div>';
@@ -2010,7 +2017,7 @@ function renderOnThisDay(){
     const t=TYPES[o.e.t]||{c:"#999",en:o.e.t};
     const col=CHART_COLORS[o.e.t]||t.c;
     return '<div class="ev" style="border-left-color:'+col+'"><b>'+o.year+'</b> &mdash; '+typeLabel(t)+' &mdash; '+plink(o.k)+(o.e.e?': '+renderText(o.e.e):"")+(o.e.pl?' <i>('+esc(o.e.pl)+')</i>':"")+'</div>';
-  }).join("") : "<p style='font-size:13px;color:#8a7a63'>"+TT("No precisely dated event is recorded on this day.","Nessun evento datato con precisione risulta registrato in questo giorno.")+"</p>");
+  }).join("") : "<p style='font-size:13px;color:#776955'>"+TT("No precisely dated event is recorded on this day.","Nessun evento datato con precisione risulta registrato in questo giorno.")+"</p>");
 }
 function initTimeline(){
   if(tlChart) return;
@@ -2488,7 +2495,7 @@ function censusBinnedLegendHtml(edges, palette, height){
   function cell(bg, label){
     return '<div style="flex:1;min-width:0;text-align:center">'+
       '<div style="height:'+height+'px;background:'+bg+';border:1px solid var(--line);border-radius:3px"></div>'+
-      '<div style="font-size:9.5px;color:#8a7a63;margin-top:2px;white-space:nowrap">'+label+'</div></div>';
+      '<div style="font-size:9.5px;color:#776955;margin-top:2px;white-space:nowrap">'+label+'</div></div>';
   }
   let html = cell("#ffffff", "0%");
   for(let i=0;i<nBins;i++){
@@ -2952,7 +2959,7 @@ function censusLegendGradientHtml(mx, palette, height, stops){
     ticks += '<span>'+v.toFixed(1)+'%</span>';
   }
   return '<div style="display:flex;border:1px solid var(--line);border-radius:4px;overflow:hidden">'+bar+'</div>'+
-    '<div style="display:flex;justify-content:space-between;font-size:10px;color:#8a7a63;margin-top:2px;gap:2px">'+ticks+'</div>';
+    '<div style="display:flex;justify-content:space-between;font-size:10px;color:#776955;margin-top:2px;gap:2px">'+ticks+'</div>';
 }
 // 1926-1946 legend: a single shared gradient (the six macro-areas all use the same
 // palette - see REGION_COLORS - so six identical chips said nothing six separate times).
@@ -2961,7 +2968,7 @@ function censusRenderLegendPost(edges){
   if(!el) return;
   let html = '<div>'+censusBinnedLegendHtml(edges, REGION_COLORS.dublinBoro)+'</div>';
   if(censusFocusPost){
-    html += '<div style="font-size:11px;color:#8a7a63;margin-top:4px">'+TT("The selected area uses its own colour scale (light&rarr;dark only between 1926, 1936 and 1946).","L&rsquo;area selezionata usa una propria scala di colore (chiaro&rarr;scuro solo tra 1926, 1936 e 1946).")+'</div>';
+    html += '<div style="font-size:11px;color:#776955;margin-top:4px">'+TT("The selected area uses its own colour scale (light&rarr;dark only between 1926, 1936 and 1946).","L&rsquo;area selezionata usa una propria scala di colore (chiaro&rarr;scuro solo tra 1926, 1936 e 1946).")+'</div>';
   }
   el.innerHTML = html;
 }
@@ -2969,7 +2976,7 @@ function censusRenderLegend(edges){
   const el = document.getElementById("censusLegend");
   let html = '<div>'+censusBinnedLegendHtml(edges, null)+'</div>';
   if(censusFocus){
-    html += '<div style="font-size:11px;color:#8a7a63;margin-top:4px;max-width:420px">'+TT("The selected section uses its own colour scale (light&rarr;dark only between its three censuses), to better show how it changed over time.","La sezione selezionata usa una propria scala di colore (chiaro&rarr;scuro solo tra i suoi tre censimenti), per mostrare meglio come è cambiata nel tempo.")+'</div>';
+    html += '<div style="font-size:11px;color:#776955;margin-top:4px;max-width:420px">'+TT("The selected section uses its own colour scale (light&rarr;dark only between its three censuses), to better show how it changed over time.","La sezione selezionata usa una propria scala di colore (chiaro&rarr;scuro solo tra i suoi tre censimenti), per mostrare meglio come è cambiata nel tempo.")+'</div>';
   }
   el.innerHTML = html;
 }
@@ -2987,9 +2994,9 @@ function censusRenderLegendProvince(edges){
       censusBinnedLegendHtml(edges, PROVINCE_COLORS[p], 14)+'</div>';
   }).join("");
   let html = '<div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-bottom:2px">'+chips+'</div>'+
-    '<div style="font-size:11px;color:#8a7a63">'+TT("Each county is coloured in proportion to its own share of Italians in the national total (the same percentage scale used in the county view, see the legend above); the numbers on the map (in the sea, near each province) show the total and the share of that year&rsquo;s national total for the whole province.","Ogni contea &egrave; colorata in proporzione alla propria percentuale di italiani sul totale nazionale (stessa scala percentuale usata nella vista per contea, vedi la legenda sopra); i numeri sulla mappa (nel mare, vicino a ciascuna provincia) mostrano il totale e la percentuale sul totale nazionale di quell&rsquo;anno per l&rsquo;intera provincia.")+'</div>';
+    '<div style="font-size:11px;color:#776955">'+TT("Each county is coloured in proportion to its own share of Italians in the national total (the same percentage scale used in the county view, see the legend above); the numbers on the map (in the sea, near each province) show the total and the share of that year&rsquo;s national total for the whole province.","Ogni contea &egrave; colorata in proporzione alla propria percentuale di italiani sul totale nazionale (stessa scala percentuale usata nella vista per contea, vedi la legenda sopra); i numeri sulla mappa (nel mare, vicino a ciascuna provincia) mostrano il totale e la percentuale sul totale nazionale di quell&rsquo;anno per l&rsquo;intera provincia.")+'</div>';
   if(censusFocus && censusFocus.kind==="province"){
-    html += '<div style="font-size:11px;color:#8a7a63;margin-top:4px">'+TT("The counties of the selected province use a colour scale local to the province (light&rarr;dark only between its three censuses).","Le contee della provincia selezionata usano una scala di colore locale alla provincia (chiaro&rarr;scuro solo tra i suoi tre censimenti).")+'</div>';
+    html += '<div style="font-size:11px;color:#776955;margin-top:4px">'+TT("The counties of the selected province use a colour scale local to the province (light&rarr;dark only between its three censuses).","Le contee della provincia selezionata usano una scala di colore locale alla provincia (chiaro&rarr;scuro solo tra i suoi tre censimenti).")+'</div>';
   }
   el.innerHTML = html;
 }
@@ -3112,7 +3119,7 @@ function censusSparklineMulti(seriesList, years){
     const y = yFor(t);
     const label = String(Math.round(t));
     return '<line x1="'+padL+'" y1="'+y.toFixed(1)+'" x2="'+(w-padR)+'" y2="'+y.toFixed(1)+'" stroke="#e6e0cd" stroke-width="1"/>'+
-      '<text x="'+(padL-8)+'" y="'+(y+3.2).toFixed(1)+'" font-size="10" text-anchor="end" fill="#8a7a63">'+label+'</text>';
+      '<text x="'+(padL-8)+'" y="'+(y+3.2).toFixed(1)+'" font-size="10" text-anchor="end" fill="#776955">'+label+'</text>';
   }).join('');
 
   const axisLines = '<line x1="'+padL+'" y1="'+padTop+'" x2="'+padL+'" y2="'+(padTop+plotH)+'" stroke="#b8ac91" stroke-width="1"/>'+
@@ -3216,9 +3223,9 @@ function censusRenderPyramidsHtml(){
   const svgs = CENSUS_YEARS_G.map(y=>'<div>'+censusPyramidSvg(y)+'</div>').join("");
   const filtered = censusAgeFilter.size && censusAgeFilter.size<AGE_BRACKETS.length;
   return '<div style="margin-top:18px">'+
-    '<h4 style="margin:0 0 6px 0;font-size:13.5px">'+TT("Age and sex pyramid","Piramide di et&agrave; e sesso")+(filtered?' <span style="font-weight:normal;color:#8a7a63">'+TT("(selected brackets)","(fasce selezionate)")+'</span>':'')+'</h4>'+
+    '<h4 style="margin:0 0 6px 0;font-size:13.5px">'+TT("Age and sex pyramid","Piramide di et&agrave; e sesso")+(filtered?' <span style="font-weight:normal;color:#776955">'+TT("(selected brackets)","(fasce selezionate)")+'</span>':'')+'</h4>'+
     '<div style="display:flex;gap:14px;flex-wrap:wrap">'+svgs+'</div>'+
-    '<p style="font-size:11px;color:#8a7a63;margin-top:4px">'+TT("Always shows both sexes, regardless of the Sex filter above (it does respect the selected age brackets). Not available for 1926-1946: the Free State reports do not publish the breakdown by age.","Mostra sempre entrambi i sessi, indipendentemente dal filtro Sesso qui sopra (rispetta invece le fasce d&rsquo;et&agrave; selezionate). Non disponibile per il 1926-1946: i rapporti del Free State non pubblicano il dettaglio per et&agrave;.")+'</p>'+
+    '<p style="font-size:11px;color:#776955;margin-top:4px">'+TT("Always shows both sexes, regardless of the Sex filter above (it does respect the selected age brackets). Not available for 1926-1946: the Free State reports do not publish the breakdown by age.","Mostra sempre entrambi i sessi, indipendentemente dal filtro Sesso qui sopra (rispetta invece le fasce d&rsquo;et&agrave; selezionate). Non disponibile per il 1926-1946: i rapporti del Free State non pubblicano il dettaglio per et&agrave;.")+'</p>'+
     '</div>';
 }
 // National ("Totale nazionale") view: a compact two-row table - one column per census,
@@ -3245,10 +3252,10 @@ function censusRenderNationalDetail(){
   const pyramidCols = CENSUS_YEARS_G.map(y=>'<div class="censusMapCol">'+censusPyramidSvg(y)+'</div>').join("");
   el.innerHTML = '<h3 class="sec">'+TT("National total","Totale nazionale")+'</h3>'+
     '<div class="censusMapsRow">'+valueCols+'</div>'+
-    '<p style="font-size:12px;color:#8a7a63;margin-top:6px">'+TT("Click "+hint+" on one of the three maps to see the detail for that section.","Clicca "+hint+" su una delle tre mappe per vedere il dettaglio di quella sezione.")+'</p>'+
-    '<h4 style="margin:20px 0 6px 0;font-size:13.5px">'+TT("Age and sex pyramid","Piramide di et\u00e0 e sesso")+(filtered?' <span style="font-weight:normal;color:#8a7a63">'+TT("(selected brackets)","(fasce selezionate)")+'</span>':'')+TT(", by census",", per censimento")+'</h4>'+
+    '<p style="font-size:12px;color:#776955;margin-top:6px">'+TT("Click "+hint+" on one of the three maps to see the detail for that section.","Clicca "+hint+" su una delle tre mappe per vedere il dettaglio di quella sezione.")+'</p>'+
+    '<h4 style="margin:20px 0 6px 0;font-size:13.5px">'+TT("Age and sex pyramid","Piramide di et\u00e0 e sesso")+(filtered?' <span style="font-weight:normal;color:#776955">'+TT("(selected brackets)","(fasce selezionate)")+'</span>':'')+TT(", by census",", per censimento")+'</h4>'+
     '<div class="censusMapsRow">'+pyramidCols+'</div>'+
-    '<p style="font-size:11px;color:#8a7a63;margin-top:4px">'+TT("Each pyramid lines up with the map for the same year above. It always shows both sexes, regardless of the Sex filter (it does respect the selected age brackets). Not available for 1926-1946: the Free State reports do not publish the breakdown by age.","Ogni piramide \u00e8 in linea con la mappa dello stesso anno qui sopra. Mostra sempre entrambi i sessi, indipendentemente dal filtro Sesso (rispetta invece le fasce d&rsquo;et\u00e0 selezionate). Non disponibile per il 1926-1946: i rapporti del Free State non pubblicano il dettaglio per et\u00e0.")+'</p>';
+    '<p style="font-size:11px;color:#776955;margin-top:4px">'+TT("Each pyramid lines up with the map for the same year above. It always shows both sexes, regardless of the Sex filter (it does respect the selected age brackets). Not available for 1926-1946: the Free State reports do not publish the breakdown by age.","Ogni piramide \u00e8 in linea con la mappa dello stesso anno qui sopra. Mostra sempre entrambi i sessi, indipendentemente dal filtro Sesso (rispetta invece le fasce d&rsquo;et\u00e0 selezionate). Non disponibile per il 1926-1946: i rapporti del Free State non pubblicano il dettaglio per et\u00e0.")+'</p>';
 }
 // Mirrors censusRenderNationalDetail's layout exactly (same .censusMapsRow/.censusMapCol
 // per-year tables, same trend chart, same pyramid-row pattern below) so the two "Totale"
@@ -3287,7 +3294,7 @@ function censusRenderDetailPost(regionKey){
     REGION_MEMBERS[regionKey].cities.map(ck=>censusLabel("city",ck))
   ).join(", ");
   el.innerHTML = '<h3 class="sec">'+esc(REGION_LABELS[regionKey])+'</h3>'+
-    '<p style="font-size:11.5px;color:#8a7a63;margin:-4px 0 8px 0">'+TT("Single figure reported by the census for the whole area: ","Dato unico riportato dal censimento per l&rsquo;intera area: ")+esc(membersTxt)+'.</p>'+
+    '<p style="font-size:11.5px;color:#776955;margin:-4px 0 8px 0">'+TT("Single figure reported by the census for the whole area: ","Dato unico riportato dal censimento per l&rsquo;intera area: ")+esc(membersTxt)+'.</p>'+
     '<div style="display:flex;flex-direction:column;gap:12px;align-items:flex-start">'+
     '<div style="max-width:100%;overflow-x:auto"><table class="tl" style="max-width:480px"><thead><tr><th>'+TT("Census","Censimento")+'</th><th>'+TT("Italians","Italiani")+'</th><th>'+TT("% of Free State total","% sul totale Free State")+'</th></tr></thead><tbody>'+
     body+
@@ -3359,7 +3366,7 @@ function censusDeltaParen(oldV, newV){
   let pctStr;
   if(oldV===0){ pctStr = newV>0 ? TT("new","nuovo") : TT("unchanged","invariato"); }
   else { const pct = diff/oldV*100; pctStr = (pct>0?"+":"")+pct.toFixed(0)+"%"; }
-  const color = diff>0 ? "#1f6b33" : (diff<0 ? "#a03a2c" : "#8a7a63");
+  const color = diff>0 ? "#1f6b33" : (diff<0 ? "#a03a2c" : "#776955");
   return ' <span style="color:'+color+';font-size:11.5px;white-space:nowrap">('+sign+diff+' / '+pctStr+')</span>';
 }
 // Renders a table cell for `raw` at year index idx, with an inline (+delta / +pct%)
@@ -3374,7 +3381,7 @@ function censusDeltaHtml(oldV, newV){
   let pctStr;
   if(oldV===0){ pctStr = newV>0 ? TT("new","nuovo") : TT("unchanged","invariato"); }
   else { const pct = diff/oldV*100; pctStr = (pct>0?"+":"")+pct.toFixed(0)+"%"; }
-  const color = diff>0 ? "#1f6b33" : (diff<0 ? "#a03a2c" : "#8a7a63");
+  const color = diff>0 ? "#1f6b33" : (diff<0 ? "#a03a2c" : "#776955");
   return '<span style="color:'+color+';font-weight:bold">'+sign+diff+'</span> <span style="color:'+color+'">('+pctStr+')</span>';
 }
 function censusRenderDeltaBadges(){
@@ -3424,7 +3431,7 @@ function censusRenderDetail(kind, key){
       "</tbody></table></div>"+
       chart+
       "</div>"+
-      (rows.some(r=>!r.recorded) ? '<p style="font-size:11px;color:#8a7a63;margin-top:4px">'+TT("* that year "+esc(censusLabel("city",cityKey))+" does not appear as a separate entry in the census: its Italians are already counted within the county total, so the &ldquo;county + city&rdquo; value is not shown to avoid double-counting them. The chart still reports the raw figure recorded that year for the city.", "* quell'anno "+esc(censusLabel("city",cityKey))+" non risulta come voce separata nel censimento: i suoi italiani sono gi&agrave; conteggiati dentro il totale della contea, quindi il valore &ldquo;contea + citt&agrave;&rdquo; non &egrave; mostrato per non contarli due volte. Il grafico riporta comunque il dato numerico grezzo registrato quell'anno per la citt&agrave;.")+'</p>' : '');
+      (rows.some(r=>!r.recorded) ? '<p style="font-size:11px;color:#776955;margin-top:4px">'+TT("* that year "+esc(censusLabel("city",cityKey))+" does not appear as a separate entry in the census: its Italians are already counted within the county total, so the &ldquo;county + city&rdquo; value is not shown to avoid double-counting them. The chart still reports the raw figure recorded that year for the city.", "* quell'anno "+esc(censusLabel("city",cityKey))+" non risulta come voce separata nel censimento: i suoi italiani sono gi&agrave; conteggiati dentro il totale della contea, quindi il valore &ldquo;contea + citt&agrave;&rdquo; non &egrave; mostrato per non contarli due volte. Il grafico riporta comunque il dato numerico grezzo registrato quell'anno per la citt&agrave;.")+'</p>' : '');
   } else {
     const rows = CENSUS_YEARS_G.map(y=>{
       const raw = censusRaw(y, kind, key);
@@ -3701,7 +3708,7 @@ function fontiRenderPostAllTable(wrapId){
     '<div style="max-width:100%;overflow-x:auto"><table class="tl" style="min-width:640px">'+
     '<thead><tr><th rowspan="2">'+TT("Macro-area","Macro-area")+'</th>'+yearHead+'<th rowspan="2">'+TT("Compare:","Confronta:")+' <select class="fontiCmpASelY" style="font-size:12px">'+yearOptsA+'</select> &rarr; <select class="fontiCmpBSelY" style="font-size:12px">'+yearOptsB+'</select></th></tr><tr>'+subHead+'</tr></thead>'+
     '<tbody>'+body+'</tbody></table></div>'+
-    '<p style="font-size:11.5px;color:#8a7a63;margin-top:6px">'+TT("Figure published only by macro-area, not county by county: Dublin = Dublin Co. Borough and D\u00fan Laoghaire Borough; Cork/Limerick/Waterford = the three County Boroughs; the Ulster counties in the Free State are Cavan, Donegal and Monaghan. Northern Ireland is not included: it had its own separate census.","Dato pubblicato solo per macro-area, non contea per contea: Dublino = Co. Borough di Dublino e Borough di D\u00fan Laoghaire; Cork/Limerick/Waterford = i tre County Borough; le contee dell&rsquo;Ulster nel Free State sono Cavan, Donegal e Monaghan. L&rsquo;Irlanda del Nord non \u00e8 compresa: aveva un proprio censimento separato.")+'</p>';
+    '<p style="font-size:11.5px;color:#776955;margin-top:6px">'+TT("Figure published only by macro-area, not county by county: Dublin = Dublin Co. Borough and D\u00fan Laoghaire Borough; Cork/Limerick/Waterford = the three County Boroughs; the Ulster counties in the Free State are Cavan, Donegal and Monaghan. Northern Ireland is not included: it had its own separate census.","Dato pubblicato solo per macro-area, non contea per contea: Dublino = Co. Borough di Dublino e Borough di D\u00fan Laoghaire; Cork/Limerick/Waterford = i tre County Borough; le contee dell&rsquo;Ulster nel Free State sono Cavan, Donegal e Monaghan. L&rsquo;Irlanda del Nord non \u00e8 compresa: aveva un proprio censimento separato.")+'</p>';
   const selA = wrap.querySelector(".fontiCmpASelY"), selB = wrap.querySelector(".fontiCmpBSelY");
   if(selA) selA.addEventListener("change", ()=>{ fontiCmp2.a = selA.value; fontiRenderAll(); });
   if(selB) selB.addEventListener("change", ()=>{ fontiCmp2.b = selB.value; fontiRenderAll(); });
@@ -3723,7 +3730,7 @@ function fontiRenderPostYear(year){
     '<table class="tl" style="max-width:480px">'+
     '<thead><tr><th>'+TT("Macro-area","Macro-area")+'</th><th style="text-align:center">M</th><th style="text-align:center">F</th><th style="text-align:center">'+TT("Total","Totale")+'</th></tr></thead>'+
     '<tbody>'+body+'</tbody></table>'+
-    '<p style="font-size:12px;color:#8a7a63;margin-top:8px">'+TT("Total Irish Free State "+esc(year)+": "+total+" Italians. Figure published only by macro-area, not county by county. Northern Ireland is not included: it had its own separate census.","Totale Irish Free State "+esc(year)+": "+total+" italiani. Dato pubblicato solo per macro-area, non contea per contea. L&rsquo;Irlanda del Nord non \u00e8 compresa: aveva un proprio censimento separato.")+'</p>';
+    '<p style="font-size:12px;color:#776955;margin-top:8px">'+TT("Total Irish Free State "+esc(year)+": "+total+" Italians. Figure published only by macro-area, not county by county. Northern Ireland is not included: it had its own separate census.","Totale Irish Free State "+esc(year)+": "+total+" italiani. Dato pubblicato solo per macro-area, non contea per contea. L&rsquo;Irlanda del Nord non \u00e8 compresa: aveva un proprio censimento separato.")+'</p>';
 }
 const FONTI_DELTA_SPANS = {
   "d1891_1901": ["1891","1901"],
@@ -3747,7 +3754,7 @@ function fontiCellHtml(v){
   return Math.round(v.raw)+' ('+v.pct.toFixed(1)+'%)';
 }
 function fontiDeltaCellHtml(a, b){
-  if(a.raw===null || b.raw===null) return '<span style="color:#8a7a63">n/d</span>';
+  if(a.raw===null || b.raw===null) return '<span style="color:#776955">n/d</span>';
   return censusDeltaHtml(a.raw, b.raw);
 }
 function fontiSortRowsAllGeneric(rows, years, sortState, cmpState){
@@ -3805,7 +3812,7 @@ function fontiRenderAll(){
   const wrap = document.getElementById("fontiTableWrap");
   if(!wrap) return;
   wrap.innerHTML = '<div id="fontiAllWrap1"></div><div id="fontiAllWrap2"></div>'+
-    '<p style="font-size:12px;color:#8a7a63;margin-top:8px">'+TT("Click a column header to sort (again to reverse) in the first table. Choose two censuses in the last column of each table to see the change between them. The two tables remain separate because 1891-1911 has the figure for each county/city, while 1926-1946 has only the aggregate figure by macro-area: comparing them on the same row would be misleading. Cities not recorded as a separate entry in at least one of the three 1891-1911 censuses (their Italians remain counted within the county that year) do not appear in the first table.","Clicca un&rsquo;intestazione di colonna per ordinare (di nuovo per invertire) nella prima tabella. Scegli due censimenti nell&rsquo;ultima colonna di ciascuna tabella per vederne la variazione. Le due tabelle restano separate perch&eacute; il 1891-1911 ha il dato per singola contea/citt&agrave;, mentre il 1926-1946 ha solo il dato aggregato per macro-area: confrontarli sulla stessa riga sarebbe fuorviante. Le citt&agrave; non rilevate come voce separata in almeno uno dei tre censimenti 1891-1911 (i loro italiani restano conteggiati nella contea quell&rsquo;anno) non compaiono nella prima tabella.")+'</p>';
+    '<p style="font-size:12px;color:#776955;margin-top:8px">'+TT("Click a column header to sort (again to reverse) in the first table. Choose two censuses in the last column of each table to see the change between them. The two tables remain separate because 1891-1911 has the figure for each county/city, while 1926-1946 has only the aggregate figure by macro-area: comparing them on the same row would be misleading. Cities not recorded as a separate entry in at least one of the three 1891-1911 censuses (their Italians remain counted within the county that year) do not appear in the first table.","Clicca un&rsquo;intestazione di colonna per ordinare (di nuovo per invertire) nella prima tabella. Scegli due censimenti nell&rsquo;ultima colonna di ciascuna tabella per vederne la variazione. Le due tabelle restano separate perch&eacute; il 1891-1911 ha il dato per singola contea/citt&agrave;, mentre il 1926-1946 ha solo il dato aggregato per macro-area: confrontarli sulla stessa riga sarebbe fuorviante. Le citt&agrave; non rilevate come voce separata in almeno uno dei tre censimenti 1891-1911 (i loro italiani restano conteggiati nella contea quell&rsquo;anno) non compaiono nella prima tabella.")+'</p>';
   fontiRenderOneAllTable(CENSUS_YEARS_G, fontiSortAll1, fontiCmp1, "fontiAllWrap1", "1891 &ndash; 1911");
   fontiRenderPostAllTable("fontiAllWrap2");
 }
@@ -3834,7 +3841,7 @@ function fontiRender(){
   }).join("");
   const wrap = document.getElementById("fontiTableWrap");
   if(!wrap) return;
-  const note = '<p style="font-size:12px;color:#8a7a63;margin-top:8px">'+TT("Total "+esc(fontiYear)+": "+Math.round(total)+" Italians across all of Ireland. Click a column header to sort (again to reverse).","Totale "+esc(fontiYear)+": "+Math.round(total)+" italiani su tutta l&rsquo;Irlanda. Clicca un&rsquo;intestazione di colonna per ordinare (di nuovo per invertire).")+
+  const note = '<p style="font-size:12px;color:#776955;margin-top:8px">'+TT("Total "+esc(fontiYear)+": "+Math.round(total)+" Italians across all of Ireland. Click a column header to sort (again to reverse).","Totale "+esc(fontiYear)+": "+Math.round(total)+" italiani su tutta l&rsquo;Irlanda. Clicca un&rsquo;intestazione di colonna per ordinare (di nuovo per invertire).")+
     (rows.some(r=>r.notRecorded) ? ' <br>'+TT("* city not recorded as a separate entry that year in the original census.","* citt\u00e0 non rilevata come voce separata quell&rsquo;anno nel censimento originale.") : '')+
     "</p>";
   wrap.innerHTML =
@@ -3942,14 +3949,14 @@ function elenchiRender(){
     const truePct = raw ? Math.round(trueN/raw*100) : 0;
     const profPct = trueN ? Math.round(people.length/trueN*100) : null;
     rows += '<div class="k">'+TT("Total found in the census (search by place of birth)","Totale trovato nel censimento (ricerca per luogo di nascita)")+'</div><div>'+raw+'</div>';
-    rows += '<div class="k">&nbsp;&nbsp;&mdash; '+TT("of which false Italians","di cui falsi italiani")+'</div><div>'+falseN+' <span style="color:#8a7a63">('+falsePct+'% '+TT("of total","del totale")+')</span></div>';
-    rows += '<div class="k">&nbsp;&nbsp;&mdash; '+TT("of which true Italians","di cui veri italiani")+'</div><div>'+trueN+' <span style="color:#8a7a63">('+truePct+'% '+TT("of total","del totale")+')</span></div>';
-    rows += '<div class="k">'+TT("Profiles created","Profili creati")+'</div><div>'+people.length+(profPct!==null?' <span style="color:#8a7a63">('+profPct+'% '+TT("of true Italians","dei veri italiani")+')</span>':'')+'</div>';
+    rows += '<div class="k">&nbsp;&nbsp;&mdash; '+TT("of which false Italians","di cui falsi italiani")+'</div><div>'+falseN+' <span style="color:#776955">('+falsePct+'% '+TT("of total","del totale")+')</span></div>';
+    rows += '<div class="k">&nbsp;&nbsp;&mdash; '+TT("of which true Italians","di cui veri italiani")+'</div><div>'+trueN+' <span style="color:#776955">('+truePct+'% '+TT("of total","del totale")+')</span></div>';
+    rows += '<div class="k">'+TT("Profiles created","Profili creati")+'</div><div>'+people.length+(profPct!==null?' <span style="color:#776955">('+profPct+'% '+TT("of true Italians","dei veri italiani")+')</span>':'')+'</div>';
     if(notYet.length) rows += '<div class="k">'+TT("Identified as true Italians but without a profile yet","Identificati come veri italiani ma senza ancora una scheda")+'</div><div>'+notYet.length+'</div>';
     if(data.officialNational!==undefined){
       rows += '<div class="k" style="padding-top:6px;border-top:1px solid var(--line);margin-top:4px">'+TT("For comparison: official total published by the census","Per confronto: totale ufficiale pubblicato dal censimento")+'</div>'+
         '<div style="padding-top:6px;border-top:1px solid var(--line);margin-top:4px">'+data.officialNational+
-        ' <span style="color:#8a7a63">'+TT("(the difference from the true Italians found is probably due to transcription errors or entries not picked up by the search)","(la differenza rispetto ai veri italiani trovati &egrave; probabilmente dovuta a refusi di trascrizione o voci non recuperate dalla ricerca)")+'</span></div>';
+        ' <span style="color:#776955">'+TT("(the difference from the true Italians found is probably due to transcription errors or entries not picked up by the search)","(la differenza rispetto ai veri italiani trovati &egrave; probabilmente dovuta a refusi di trascrizione o voci non recuperate dalla ricerca)")+'</span></div>';
     }
   } else {
     // 1926, or county view: simple comparison of official vs profiled
@@ -3958,11 +3965,11 @@ function elenchiRender(){
     if(official!==null && official!==undefined){
       rows += '<div class="k">'+TT("Italians according to the official census","Italiani secondo il censimento ufficiale")+'</div><div>'+official+'</div>';
     } else if(isCounty && elenchiYear==="1926"){
-      rows += '<div class="k">'+TT("Italians according to the official census","Italiani secondo il censimento ufficiale")+'</div><div style="color:#8a7a63">'+TT("not published for individual counties in 1926 (macro-area only)","non pubblicato per singola contea nel 1926 (solo per macro-area)")+'</div>';
+      rows += '<div class="k">'+TT("Italians according to the official census","Italiani secondo il censimento ufficiale")+'</div><div style="color:#776955">'+TT("not published for individual counties in 1926 (macro-area only)","non pubblicato per singola contea nel 1926 (solo per macro-area)")+'</div>';
     }
-    rows += '<div class="k">'+TT("People identified and profiled","Persone identificate e profilate")+'</div><div>'+people.length+(pct!==null?' <span style="color:#8a7a63">('+pct+'% '+TT("of official total","del totale ufficiale")+')</span>':'')+'</div>';
+    rows += '<div class="k">'+TT("People identified and profiled","Persone identificate e profilate")+'</div><div>'+people.length+(pct!==null?' <span style="color:#776955">('+pct+'% '+TT("of official total","del totale ufficiale")+')</span>':'')+'</div>';
     if(!isCounty && elenchiYear==="1926"){
-      rows += '<div class="k" style="font-size:11.5px;color:#8a7a63">'+TT("For 1926 a systematic review like the one for 1901 and 1911 has not yet been carried out: there is therefore no (yet) list of false Italians to exclude.","Per il 1926 non &egrave; ancora stata fatta una revisione sistematica come per il 1901 e il 1911: non c&rsquo;&egrave; quindi (ancora) un elenco di falsi italiani da escludere.")+'</div>';
+      rows += '<div class="k" style="font-size:11.5px;color:#776955">'+TT("For 1926 a systematic review like the one for 1901 and 1911 has not yet been carried out: there is therefore no (yet) list of false Italians to exclude.","Per il 1926 non &egrave; ancora stata fatta una revisione sistematica come per il 1901 e il 1911: non c&rsquo;&egrave; quindi (ancora) un elenco di falsi italiani da escludere.")+'</div>';
     }
   }
   summaryEl.innerHTML = '<div class="cgrid" style="grid-template-columns:340px 1fr;max-width:760px">'+rows+'</div>';
@@ -3974,22 +3981,22 @@ function elenchiRender(){
     '</div>'
   ).join("")+'</div>';
   if(!people.length){
-    html = '<p style="font-size:13px;color:#8a7a63">'+TT("No one profiled for this selection yet.","Nessuna persona profilata per questa selezione, per ora.")+'</p>' + html;
+    html = '<p style="font-size:13px;color:#776955">'+TT("No one profiled for this selection yet.","Nessuna persona profilata per questa selezione, per ora.")+'</p>' + html;
   }
   if(notYet.length){
     html += '<h4 style="margin:18px 0 6px 0;font-size:13px">'+TT("Identified as Italian in the census but without a profile yet ("+notYet.length+")","Identificate come italiane nel censimento ma senza ancora una scheda propria ("+notYet.length+")")+'</h4>'+
-      '<p style="font-size:12.5px;color:#8a7a63">'+notYet.map(n=>esc(n.name)).join(", ")+'</p>';
+      '<p style="font-size:12.5px;color:#776955">'+notYet.map(n=>esc(n.name)).join(", ")+'</p>';
   }
   listEl.innerHTML = html;
   if(!isCounty && data.falseList && data.falseList.length){
     const rowsHtml = data.falseList.map(f=>{
       const bd = f.birthDate ? esc(f.birthDate) : '&#8211;';
       const bp = f.birthPlace ? esc(f.birthPlace) : '&#8211;';
-      const cens = f.censusUrl ? '<a class="pl" onclick="window.open(\''+f.censusUrl.replace(/'/g,"\\'")+'\',\'_blank\')">'+esc(f.censusYear)+'</a>' : esc(f.censusYear)+' <span style="color:#8a7a63">'+TT("(link not available)","(link non disponibile)")+'</span>';
+      const cens = f.censusUrl ? '<a class="pl" onclick="window.open(\''+f.censusUrl.replace(/'/g,"\\'")+'\',\'_blank\')">'+esc(f.censusYear)+'</a>' : esc(f.censusYear)+' <span style="color:#776955">'+TT("(link not available)","(link non disponibile)")+'</span>';
       return '<tr><td>'+esc(f.name)+'</td><td>'+bd+'</td><td>'+bp+'</td><td>'+cens+'</td><td>'+(f.note?esc(f.note):'&#8211;')+'</td></tr>';
     }).join("");
     falseEl.innerHTML = '<details class="cbox"><summary>'+TT("False Italians excluded from the count ("+data.falseList.length+")","Falsi italiani esclusi dal conteggio ("+data.falseList.length+")")+'</summary>'+
-      '<p style="font-size:12px;color:#8a7a63;margin:6px 0 10px 0">'+TT("People born in Italy but not belonging to the Italian community &mdash; children of officials, governesses, clergy or British military personnel born in Italy for reasons of service, and similar cases: they appear in the search by place of birth but have been excluded from the count. Date of birth and place of birth are reported only where already noted; the link in Census opens the original profile where available.","Persone nate in Italia ma non appartenenti alla comunit\u00e0 italiana &mdash; figli di funzionari, governanti, ecclesiastici o militari britannici nati in Italia per motivi di servizio, e simili: compaiono nella ricerca per luogo di nascita ma sono state escluse dal conteggio. Data di nascita e luogo di nascita sono riportati solo dove gi\u00e0 annotati; il collegamento in Censimento apre la scheda originale quando disponibile.")+'</p>'+
+      '<p style="font-size:12px;color:#776955;margin:6px 0 10px 0">'+TT("People born in Italy but not belonging to the Italian community &mdash; children of officials, governesses, clergy or British military personnel born in Italy for reasons of service, and similar cases: they appear in the search by place of birth but have been excluded from the count. Date of birth and place of birth are reported only where already noted; the link in Census opens the original profile where available.","Persone nate in Italia ma non appartenenti alla comunit\u00e0 italiana &mdash; figli di funzionari, governanti, ecclesiastici o militari britannici nati in Italia per motivi di servizio, e simili: compaiono nella ricerca per luogo di nascita ma sono state escluse dal conteggio. Data di nascita e luogo di nascita sono riportati solo dove gi\u00e0 annotati; il collegamento in Censimento apre la scheda originale quando disponibile.")+'</p>'+
       '<div style="max-width:100%;overflow-x:auto"><table class="tl"><thead><tr><th>'+TT("Name (as in the census)","Nome (come nel censimento)")+'</th><th>'+TT("Date of birth","Data di nascita")+'</th><th>'+TT("Place of birth","Luogo di nascita")+'</th><th>'+TT("Census","Censimento")+'</th><th>'+TT("Notes","Note")+'</th></tr></thead><tbody>'+
       rowsHtml+
       '</tbody></table></div></details>';
@@ -4008,6 +4015,7 @@ const STATIC_I18N = {
   "i18n-colo-h3": "How to cite, reuse and correct this site",
   "i18n-colo-cite": "<b>Citation</b> &mdash; Luca Bertolani Azeredo, <i>Italians in Ireland: A Prosopographical Database, 1850&ndash;2026</i>, https://italians-in-ireland.github.io (accessed <span class=\"colDate\"></span>).",
   "i18n-colo-living": "<b>Living people</b> &mdash; The database is above all a record of lives that have ended, but some profiles reach into recent decades and may concern people who are still alive or who died recently. The information comes from public sources: censuses open to consultation, civil registration records, obituaries and gravestones. If you appear in a profile, or a relative of yours does, and you would like something corrected or removed, <a href=\"https://irishhistorians.ie/members/lucaba/\" target=\"_blank\" rel=\"noopener\">write to me</a> and I will see to it.",
+  "i18n-colo-tiles": "<b>Maps and external connections</b> &mdash; The maps on this site draw places and historical tiles over a base map supplied by the CARTO service, built on OpenStreetMap data. When you open a map your browser connects to that service, which receives your IP address: it is the only third-party connection consulting this site involves. Everything else &mdash; text, photographs, historical tiles, typefaces, code &mdash; is served from this site. There are no analytics, no trackers and no cookies.",
   "i18n-colo-lic": "<b>Licence</b> &mdash; The texts and genealogical reconstructions on this site are released under a <a href=\"https://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\" rel=\"noopener\">Creative Commons BY-NC 4.0</a> licence: you may reuse them for non-commercial purposes, citing the author and the site. The photographs are excluded from the licence and remain with their owners: reproducing them requires permission. The original records cited (censuses, civil registration) are in the public domain and remain available at the sources linked from every profile.",
   /*END COLOPHON*/
   "i18n-home-h2": "Welcome",
@@ -4089,6 +4097,12 @@ const STATIC_I18N = {
 };
 
 function applyStaticI18n(){
+          /*ARIALABELS*/
+  document.querySelectorAll("[data-i18n-aria]").forEach(function(el){
+    if(!el.dataset.ariaEn) el.dataset.ariaEn = el.getAttribute("aria-label") || "";
+    el.setAttribute("aria-label", LANG === "en" ? el.dataset.ariaEn : el.dataset.i18nAria);
+  });
+  /*END ARIALABELS*/
   for(const id in STATIC_I18N){
     const el = document.getElementById(id);
     if(!el) continue;

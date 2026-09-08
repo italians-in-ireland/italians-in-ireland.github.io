@@ -26,20 +26,20 @@
 <meta name="theme-color" content="#7a1f2a">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=&apos;http://www.w3.org/2000/svg&apos; viewBox=&apos;0 0 32 32&apos;%3E%3Crect width=&apos;32&apos; height=&apos;32&apos; fill=&apos;%23f6f0e1&apos;/%3E%3Crect x=&apos;3&apos; y=&apos;6&apos; width=&apos;4&apos; height=&apos;20&apos; fill=&apos;%23009246&apos;/%3E%3Crect x=&apos;7&apos; y=&apos;6&apos; width=&apos;4&apos; height=&apos;20&apos; fill=&apos;%23f1f2f1&apos;/%3E%3Crect x=&apos;11&apos; y=&apos;6&apos; width=&apos;4&apos; height=&apos;20&apos; fill=&apos;%23ce2b37&apos;/%3E%3Crect x=&apos;17&apos; y=&apos;6&apos; width=&apos;4&apos; height=&apos;20&apos; fill=&apos;%23169b62&apos;/%3E%3Crect x=&apos;21&apos; y=&apos;6&apos; width=&apos;4&apos; height=&apos;20&apos; fill=&apos;%23ffffff&apos;/%3E%3Crect x=&apos;25&apos; y=&apos;6&apos; width=&apos;4&apos; height=&apos;20&apos; fill=&apos;%23ff883e&apos;/%3E%3C/svg%3E">
 <!--/OGMETA-->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+<!--VENDOR-->
+<link rel="stylesheet" href="vendor/leaflet.min.css">
+<link rel="stylesheet" href="vendor/MarkerCluster.min.css">
+<link rel="stylesheet" href="vendor/MarkerCluster.Default.min.css">
+<link rel="stylesheet" href="fonts/fonts.css">
+<script src="vendor/leaflet.min.js"></script>
+<script src="vendor/leaflet.markercluster.min.js"></script>
+<script src="vendor/chart.umd.min.js"></script>
+<!--/VENDOR-->
 <style>
 :root {
   --ink:#241b12;
   --ink-soft:#5c4d38;
-  --ink-faint:#8a7a63;
+  --ink-faint:#776955;
   --paper:#f6f0e1;
   --paper-deep:#eadfc2;
   --card:#fbf7ee;
@@ -397,6 +397,7 @@ img, svg, canvas { max-width:100%; }
       <h3 id="i18n-colo-h3" style="margin-top:0;">Come citare, usare e correggere questo sito</h3>
       <p id="i18n-colo-cite"><b>Citazione</b> &mdash; Luca Bertolani Azeredo, <i>Italians in Ireland: A Prosopographical Database, 1850&ndash;2026</i>, https://italians-in-ireland.github.io (consultato il <span class="colDate"></span>).</p>
       <p id="i18n-colo-living"><b>Persone viventi</b> &mdash; Il database ricostruisce soprattutto vite concluse, ma alcune schede arrivano a decenni recenti e possono riguardare persone viventi o scomparse da poco. Le informazioni provengono da fonti pubbliche: censimenti aperti alla consultazione, registri di stato civile, necrologi, lapidi. Se compari in una scheda, o vi compare un tuo familiare, e vuoi che un dato sia corretto o rimosso, <a href="https://irishhistorians.ie/members/lucaba/" target="_blank" rel="noopener">scrivimi</a> e provvedo.</p>
+      <p id="i18n-colo-tiles"><b>Mappe e collegamenti esterni</b> &mdash; Le mappe di questo sito disegnano i luoghi e le tessere storiche sopra una mappa di sfondo fornita dal servizio CARTO, su dati OpenStreetMap. Aprendo una mappa il tuo browser si collega a quel servizio, che riceve il tuo indirizzo IP: e&rsquo; l&rsquo;unico collegamento verso terzi che la consultazione comporta. Tutto il resto &mdash; testi, fotografie, tessere storiche, caratteri tipografici, codice &mdash; e&rsquo; servito da questo sito. Non ci sono statistiche, non ci sono traccianti e non vengono usati cookie.</p>
       <p id="i18n-colo-lic"><b>Licenza</b> &mdash; I testi e le ricostruzioni genealogiche di questo sito sono distribuiti con licenza <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.it" target="_blank" rel="noopener">Creative Commons BY-NC 4.0</a>: puoi riutilizzarli per scopi non commerciali citando l&rsquo;autore e il sito. Le fotografie sono escluse dalla licenza e restano dei rispettivi proprietari: per riprodurle serve un&rsquo;autorizzazione. I documenti originali citati (censimenti, atti di stato civile) sono di dominio pubblico e restano consultabili alle fonti collegate a ogni scheda.</p>
     </div>
     <!--/COLOPHON-->
@@ -405,9 +406,9 @@ img, svg, canvas { max-width:100%; }
 
 <div class="tab" id="tab-people">
   <div class="controls">
-    <input type="text" id="q" placeholder="Search by name&hellip;" size="30">
-    <select id="famsel"><option value="">All families</option></select>
-    <select id="bornsel">
+    <input type="text" id="q" aria-label="Search people by name" data-i18n-aria="Cerca una persona per nome" placeholder="Search by name&hellip;" size="30">
+    <select id="famsel" aria-label="Filter by family" data-i18n-aria="Filtra per famiglia"><option value="">All families</option></select>
+    <select id="bornsel" aria-label="Filter by place of birth" data-i18n-aria="Filtra per luogo di nascita">
       <option value="">Born anywhere</option><option value="it">Born in Italy</option><option value="other">Born elsewhere</option>
     </select>
   </div>
@@ -430,7 +431,7 @@ img, svg, canvas { max-width:100%; }
       <div style="margin-top:8px"><label class="fchk"><input type="checkbox" id="showMoves"> Show movement paths</label></div>
       <div id="moveLegend" style="margin-top:6px">
         <div style="height:8px;width:150px;border-radius:4px;background:linear-gradient(to right,#e8b04b,#b3542e,#5c1a1a,#24090e)"></div>
-        <div style="display:flex;justify-content:space-between;font-size:11px;color:#8a7a63"><span id="legendFrom">1850</span><span id="legendTo">2020</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:#776955"><span id="legendFrom">1850</span><span id="legendTo">2020</span></div>
       </div>
       </div>
     </div>
@@ -439,7 +440,7 @@ img, svg, canvas { max-width:100%; }
         <span>Events up to: <b id="ylab">2020</b></span>
         <button class="small" id="play">&#9654; Play</button>
       </div>
-      <input type="range" id="yslider" min="1850" max="2020" value="2020" step="1">
+      <input type="range" id="yslider" aria-label="Year shown on the map" data-i18n-aria="Anno mostrato sulla mappa" min="1850" max="2020" value="2020" step="1">
       <div style="display:flex;gap:10px;align-items:center;margin-top:8px;font-size:12px;flex-wrap:wrap;">
         <label>From <input type="number" id="yfrom" value="1850" style="width:64px"></label>
         <label>To <input type="number" id="yto" value="2020" style="width:64px"></label>
@@ -458,7 +459,7 @@ img, svg, canvas { max-width:100%; }
 </div>
 
 <div class="tab" id="tab-families">
-  <div class="controls"><input type="text" id="famq" placeholder="Search family&hellip;" size="30"></div>
+  <div class="controls"><input type="text" id="famq" aria-label="Search families by name" data-i18n-aria="Cerca una famiglia per nome" placeholder="Search family&hellip;" size="30"></div>
   <table class="tl" id="famtable" style="max-width:640px">
     <thead><tr><th data-sortkey="f" style="cursor:pointer">Family<span class="sortarrow"></span></th><th data-sortkey="n" style="cursor:pointer">Members<span class="sortarrow"></span></th><th data-sortkey="min" style="cursor:pointer">Earliest record<span class="sortarrow"></span></th><th data-sortkey="max" style="cursor:pointer">Latest record<span class="sortarrow"></span></th></tr></thead>
     <tbody></tbody>
@@ -469,7 +470,7 @@ img, svg, canvas { max-width:100%; }
   <div style="margin-bottom:10px;display:flex;gap:18px;flex-wrap:wrap;align-items:center">
     <div>
       <label style="font-size:13px" id="i18n-tree-view-label">Vista:</label>
-      <select id="treeScopeSel" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
+      <select id="treeScopeSel" aria-label="Scope of the family tree" data-i18n-aria="Ambito dell'albero genealogico" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
         <option value="person" selected id="i18n-tree-opt-person">Persona</option>
         <option value="family" id="i18n-tree-opt-family">Famiglia</option>
         <option value="community" id="i18n-tree-opt-community">Comunit&agrave;</option>
@@ -477,28 +478,28 @@ img, svg, canvas { max-width:100%; }
     </div>
     <div id="treePersonCtl"><label style="font-size:13px" id="i18n-tree-person-label">Persona:</label><div class="msel" id="treePersonMsel" style="width:280px;display:inline-block;vertical-align:middle"></div></div>
     <div id="treeFamilyCtl" style="display:none"><label style="font-size:13px" id="i18n-tree-family-label">Famiglia:</label>
-      <select id="treeFamilySel" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
+      <select id="treeFamilySel" aria-label="Family to display" data-i18n-aria="Famiglia da visualizzare" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
         <option value="" id="i18n-tree-choose">Scegli...</option>
       </select>
       <span id="treeFamilyStats" style="font-size:12.5px;color:var(--ink-soft);margin-left:10px"></span>
     </div>
     <div id="treeCommunityCtl" style="display:none">
       <label style="font-size:13px" id="i18n-tree-mode-label">Modalit&agrave;:</label>
-      <select id="treeCommunityModeSel" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
+      <select id="treeCommunityModeSel" aria-label="Community view mode" data-i18n-aria="Modalita' della vista comunita'" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
         <option value="familymap" selected id="i18n-tree-opt-familymap">Mappa delle famiglie</option>
         <option value="fullgraph" id="i18n-tree-opt-fullgraph">Grafico completo</option>
       </select>
     </div>
   </div>
   <div id="treeWrap"><div id="treeInner"></div><div id="treeMinimap" style="position:absolute;bottom:10px;right:10px;width:170px;height:130px;border:1px solid var(--line);border-radius:2px;background:rgba(251,247,238,.95);box-shadow:0 3px 10px rgba(36,27,18,.18);overflow:hidden;pointer-events:none;z-index:10"></div></div>
-  <p style="font-size:12px;color:#8a7a63;margin-top:6px" id="i18n-tree-hint">Trascina per spostarti, rotellina del mouse per zoom. Clicca un riquadro per aprire la scheda della persona (o una famiglia per esplorarla nel dettaglio).</p>
+  <p style="font-size:12px;color:#776955;margin-top:6px" id="i18n-tree-hint">Trascina per spostarti, rotellina del mouse per zoom. Clicca un riquadro per aprire la scheda della persona (o una famiglia per esplorarla nel dettaglio).</p>
 </div>
 
 <div class="tab" id="tab-timeline">
   <p style="font-size:13.5px">All dated events in the database, grouped by year range. Use the checkboxes below to filter by event type or place.</p>
   <div style="margin:6px 0 10px 0;display:flex;align-items:center;gap:8px">
     <label style="font-size:13px" id="i18n-tl-group-label">Raggruppa per:</label>
-    <select id="tlBucketSel" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
+    <select id="tlBucketSel" aria-label="Timeline interval" data-i18n-aria="Intervallo della cronologia" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
       <option value="1" id="i18n-tl-opt-1">1 anno</option>
       <option value="5" id="i18n-tl-opt-5">5 anni</option>
       <option value="10" selected id="i18n-tl-opt-10">10 anni</option>
@@ -513,7 +514,7 @@ img, svg, canvas { max-width:100%; }
 <div class="tab" id="tab-stats">
   <div style="margin-bottom:14px;display:flex;align-items:center;gap:8px">
     <label style="font-size:13px" id="i18n-stats-sex-label">Sesso:</label>
-    <select id="statsSexSel" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
+    <select id="statsSexSel" aria-label="Filter statistics by sex" data-i18n-aria="Filtra le statistiche per sesso" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
       <option value="all" selected id="i18n-stats-sex-all">Tutti</option>
       <option value="M">M</option>
       <option value="F">F</option>
@@ -526,7 +527,7 @@ img, svg, canvas { max-width:100%; }
       <h3 class="sec">Census data</h3>
       <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
         <div><label style="font-size:13px" id="i18n-stats-year-label">Anno:</label>
-          <select id="censYearSel" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
+          <select id="censYearSel" aria-label="Census year to map" data-i18n-aria="Anno del censimento da mappare" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
             <option value="all" selected id="i18n-stats-year-none">Nessuno (solo confronto)</option>
             <option value="1901">1901</option>
             <option value="1911">1911</option>
@@ -534,7 +535,7 @@ img, svg, canvas { max-width:100%; }
           </select>
         </div>
         <div><label style="font-size:13px" id="i18n-stats-compare-label">Confronta:</label>
-          <select id="censMetricSel" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
+          <select id="censMetricSel" aria-label="Census measure to display" data-i18n-aria="Dato del censimento da mostrare" style="font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:5px;background:var(--paper);color:inherit;font-family:inherit">
             <option value="persone" selected id="i18n-stats-metric-persone">Numero di persone</option>
             <option value="sesso" id="i18n-stats-metric-sesso">Sesso</option>
             <option value="contea" id="i18n-stats-metric-contea">Contea</option>
@@ -581,7 +582,7 @@ img, svg, canvas { max-width:100%; }
     <label class="fchk" style="display:inline-block;margin-right:8px"><input type="checkbox" class="censusAgeChk" value="60-80" checked> 60-80</label>
     <label class="fchk" style="display:inline-block"><input type="checkbox" class="censusAgeChk" value="&gt;80" checked> &gt;80</label>
   </div>
-  <p style="font-size:11px;color:#8a7a63;margin:0 0 6px 0;text-align:center" id="i18n-census-age-filter-hint">Il filtro per et&agrave; vale solo per le mappe 1891-1911 e per la piramide qui sotto: i rapporti del Free State (1926-1946) pubblicano gli italiani solo per sesso, non per et&agrave;.</p>
+  <p style="font-size:11px;color:#776955;margin:0 0 6px 0;text-align:center" id="i18n-census-age-filter-hint">Il filtro per et&agrave; vale solo per le mappe 1891-1911 e per la piramide qui sotto: i rapporti del Free State (1926-1946) pubblicano gli italiani solo per sesso, non per et&agrave;.</p>
   <div class="censusLegend" id="censusLegend"></div>
   <div class="censusMainRow">
   <div class="censusMapsRow">
@@ -591,7 +592,7 @@ img, svg, canvas { max-width:100%; }
   </div>
   <div id="censusTooltip" class="censusTooltip"></div>
   <div id="censusDetail" class="censusDetail">
-    <p style="font-size:13px;color:#8a7a63" id="i18n-census-detail-hint">Clicca una contea o citt&agrave; su una delle tre mappe per vedere il dettaglio.</p>
+    <p style="font-size:13px;color:#776955" id="i18n-census-detail-hint">Clicca una contea o citt&agrave; su una delle tre mappe per vedere il dettaglio.</p>
   </div>
   </div>
   <h3 class="sec" style="margin-top:34px" id="i18n-census-post-h3">Il Free State dopo la partizione: 1926, 1936, 1946</h3>
@@ -607,12 +608,12 @@ img, svg, canvas { max-width:100%; }
 <div class="censusMapCol"><div class="censusMapTitle">1926</div><div class="censusMapDelta" id="censusDelta_1926"></div><div class="censusMapSvgWrap" data-year="1926"><svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" style="display:inline" version="1.0" id="y1926_svg2" height="500" width="400" viewBox="0 0 400 500"><g transform="translate(0,-500)" style="display:inline" id="y1926_layer4"><use href="#censusPath_bg" xlink:href="#censusPath_bg" id="y1926_Ulster"/></g><g transform="translate(0,-500)" style="display:inline" id="y1926_layer3"><use href="#censusPath_Kerry" xlink:href="#censusPath_Kerry" id="y1926_Kerry"/><use href="#censusPath_Antrim" xlink:href="#censusPath_Antrim" id="y1926_Antrim"/><use href="#censusPath_Londonderry" xlink:href="#censusPath_Londonderry" id="y1926_Londonderry"/><use href="#censusPath_Down" xlink:href="#censusPath_Down" id="y1926_Down"/><use href="#censusPath_Armagh" xlink:href="#censusPath_Armagh" id="y1926_Armagh"/><use href="#censusPath_Louth" xlink:href="#censusPath_Louth" id="y1926_Louth"/><use href="#censusPath_Tyrone" xlink:href="#censusPath_Tyrone" id="y1926_Tyrone"/><use href="#censusPath_Wexford" xlink:href="#censusPath_Wexford" id="y1926_Wexford"/><use href="#censusPath_Dublin" xlink:href="#censusPath_Dublin" id="y1926_Dublin"/><use href="#censusPath_Wicklow" xlink:href="#censusPath_Wicklow" id="y1926_Wicklow"/><use href="#censusPath_Monaghan" xlink:href="#censusPath_Monaghan" id="y1926_Monaghan"/><use href="#censusPath_Donegal" xlink:href="#censusPath_Donegal" id="y1926_Donegal"/><use href="#censusPath_Fermanagh" xlink:href="#censusPath_Fermanagh" id="y1926_Fermanagh"/><use href="#censusPath_Waterford" xlink:href="#censusPath_Waterford" id="y1926_Waterford"/><use href="#censusPath_Cork" xlink:href="#censusPath_Cork" id="y1926_Cork"/><use href="#censusPath_Limerick" xlink:href="#censusPath_Limerick" id="y1926_Limerick"/><use href="#censusPath_Clare" xlink:href="#censusPath_Clare" id="y1926_Clare"/><use href="#censusPath_Carlow" xlink:href="#censusPath_Carlow" id="y1926_Carlow"/><use href="#censusPath_Kilkenny" xlink:href="#censusPath_Kilkenny" id="y1926_Kilkenny"/><use href="#censusPath_Laois" xlink:href="#censusPath_Laois" id="y1926_Laois"/><use href="#censusPath_Tipperary" xlink:href="#censusPath_Tipperary" id="y1926_Tipperary"/><use href="#censusPath_Meath" xlink:href="#censusPath_Meath" id="y1926_Meath"/><use href="#censusPath_Kildare" xlink:href="#censusPath_Kildare" id="y1926_Kildare"/><use href="#censusPath_Cavan" xlink:href="#censusPath_Cavan" id="y1926_Cavan"/><use href="#censusPath_Leitrim" xlink:href="#censusPath_Leitrim" id="y1926_Leitrim"/><use href="#censusPath_Sligo" xlink:href="#censusPath_Sligo" id="y1926_Sligo"/><use href="#censusPath_Roscommon" xlink:href="#censusPath_Roscommon" id="y1926_Roscommon"/><use href="#censusPath_Galway" xlink:href="#censusPath_Galway" id="y1926_Galway"/><use href="#censusPath_Longford" xlink:href="#censusPath_Longford" id="y1926_Longford"/><use href="#censusPath_Westmeath" xlink:href="#censusPath_Westmeath" id="y1926_Westmeath"/><use href="#censusPath_Offaly" xlink:href="#censusPath_Offaly" id="y1926_Offaly"/><use href="#censusPath_Mayo" xlink:href="#censusPath_Mayo" id="y1926_Mayo"/></g><g transform="translate(0,-500)" style="display:inline" id="y1926_regionBorders"><use href="#censusRegionOutline_restLeinster" xlink:href="#censusRegionOutline_restLeinster"/><use href="#censusRegionOutline_restMunster" xlink:href="#censusRegionOutline_restMunster"/><use href="#censusRegionOutline_connacht" xlink:href="#censusRegionOutline_connacht"/><use href="#censusRegionOutline_ulsterPart" xlink:href="#censusRegionOutline_ulsterPart"/></g><g style="display:inline" id="y1926_layer6"/></svg></div></div><div class="censusMapCol"><div class="censusMapTitle">1936</div><div class="censusMapDelta" id="censusDelta_1936"></div><div class="censusMapSvgWrap" data-year="1936"><svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" style="display:inline" version="1.0" id="y1936_svg2" height="500" width="400" viewBox="0 0 400 500"><g transform="translate(0,-500)" style="display:inline" id="y1936_layer4"><use href="#censusPath_bg" xlink:href="#censusPath_bg" id="y1936_Ulster"/></g><g transform="translate(0,-500)" style="display:inline" id="y1936_layer3"><use href="#censusPath_Kerry" xlink:href="#censusPath_Kerry" id="y1936_Kerry"/><use href="#censusPath_Antrim" xlink:href="#censusPath_Antrim" id="y1936_Antrim"/><use href="#censusPath_Londonderry" xlink:href="#censusPath_Londonderry" id="y1936_Londonderry"/><use href="#censusPath_Down" xlink:href="#censusPath_Down" id="y1936_Down"/><use href="#censusPath_Armagh" xlink:href="#censusPath_Armagh" id="y1936_Armagh"/><use href="#censusPath_Louth" xlink:href="#censusPath_Louth" id="y1936_Louth"/><use href="#censusPath_Tyrone" xlink:href="#censusPath_Tyrone" id="y1936_Tyrone"/><use href="#censusPath_Wexford" xlink:href="#censusPath_Wexford" id="y1936_Wexford"/><use href="#censusPath_Dublin" xlink:href="#censusPath_Dublin" id="y1936_Dublin"/><use href="#censusPath_Wicklow" xlink:href="#censusPath_Wicklow" id="y1936_Wicklow"/><use href="#censusPath_Monaghan" xlink:href="#censusPath_Monaghan" id="y1936_Monaghan"/><use href="#censusPath_Donegal" xlink:href="#censusPath_Donegal" id="y1936_Donegal"/><use href="#censusPath_Fermanagh" xlink:href="#censusPath_Fermanagh" id="y1936_Fermanagh"/><use href="#censusPath_Waterford" xlink:href="#censusPath_Waterford" id="y1936_Waterford"/><use href="#censusPath_Cork" xlink:href="#censusPath_Cork" id="y1936_Cork"/><use href="#censusPath_Limerick" xlink:href="#censusPath_Limerick" id="y1936_Limerick"/><use href="#censusPath_Clare" xlink:href="#censusPath_Clare" id="y1936_Clare"/><use href="#censusPath_Carlow" xlink:href="#censusPath_Carlow" id="y1936_Carlow"/><use href="#censusPath_Kilkenny" xlink:href="#censusPath_Kilkenny" id="y1936_Kilkenny"/><use href="#censusPath_Laois" xlink:href="#censusPath_Laois" id="y1936_Laois"/><use href="#censusPath_Tipperary" xlink:href="#censusPath_Tipperary" id="y1936_Tipperary"/><use href="#censusPath_Meath" xlink:href="#censusPath_Meath" id="y1936_Meath"/><use href="#censusPath_Kildare" xlink:href="#censusPath_Kildare" id="y1936_Kildare"/><use href="#censusPath_Cavan" xlink:href="#censusPath_Cavan" id="y1936_Cavan"/><use href="#censusPath_Leitrim" xlink:href="#censusPath_Leitrim" id="y1936_Leitrim"/><use href="#censusPath_Sligo" xlink:href="#censusPath_Sligo" id="y1936_Sligo"/><use href="#censusPath_Roscommon" xlink:href="#censusPath_Roscommon" id="y1936_Roscommon"/><use href="#censusPath_Galway" xlink:href="#censusPath_Galway" id="y1936_Galway"/><use href="#censusPath_Longford" xlink:href="#censusPath_Longford" id="y1936_Longford"/><use href="#censusPath_Westmeath" xlink:href="#censusPath_Westmeath" id="y1936_Westmeath"/><use href="#censusPath_Offaly" xlink:href="#censusPath_Offaly" id="y1936_Offaly"/><use href="#censusPath_Mayo" xlink:href="#censusPath_Mayo" id="y1936_Mayo"/></g><g transform="translate(0,-500)" style="display:inline" id="y1936_regionBorders"><use href="#censusRegionOutline_restLeinster" xlink:href="#censusRegionOutline_restLeinster"/><use href="#censusRegionOutline_restMunster" xlink:href="#censusRegionOutline_restMunster"/><use href="#censusRegionOutline_connacht" xlink:href="#censusRegionOutline_connacht"/><use href="#censusRegionOutline_ulsterPart" xlink:href="#censusRegionOutline_ulsterPart"/></g><g style="display:inline" id="y1936_layer6"/></svg></div></div><div class="censusMapCol"><div class="censusMapTitle">1946</div><div class="censusMapDelta" id="censusDelta_1946"></div><div class="censusMapSvgWrap" data-year="1946"><svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" style="display:inline" version="1.0" id="y1946_svg2" height="500" width="400" viewBox="0 0 400 500"><g transform="translate(0,-500)" style="display:inline" id="y1946_layer4"><use href="#censusPath_bg" xlink:href="#censusPath_bg" id="y1946_Ulster"/></g><g transform="translate(0,-500)" style="display:inline" id="y1946_layer3"><use href="#censusPath_Kerry" xlink:href="#censusPath_Kerry" id="y1946_Kerry"/><use href="#censusPath_Antrim" xlink:href="#censusPath_Antrim" id="y1946_Antrim"/><use href="#censusPath_Londonderry" xlink:href="#censusPath_Londonderry" id="y1946_Londonderry"/><use href="#censusPath_Down" xlink:href="#censusPath_Down" id="y1946_Down"/><use href="#censusPath_Armagh" xlink:href="#censusPath_Armagh" id="y1946_Armagh"/><use href="#censusPath_Louth" xlink:href="#censusPath_Louth" id="y1946_Louth"/><use href="#censusPath_Tyrone" xlink:href="#censusPath_Tyrone" id="y1946_Tyrone"/><use href="#censusPath_Wexford" xlink:href="#censusPath_Wexford" id="y1946_Wexford"/><use href="#censusPath_Dublin" xlink:href="#censusPath_Dublin" id="y1946_Dublin"/><use href="#censusPath_Wicklow" xlink:href="#censusPath_Wicklow" id="y1946_Wicklow"/><use href="#censusPath_Monaghan" xlink:href="#censusPath_Monaghan" id="y1946_Monaghan"/><use href="#censusPath_Donegal" xlink:href="#censusPath_Donegal" id="y1946_Donegal"/><use href="#censusPath_Fermanagh" xlink:href="#censusPath_Fermanagh" id="y1946_Fermanagh"/><use href="#censusPath_Waterford" xlink:href="#censusPath_Waterford" id="y1946_Waterford"/><use href="#censusPath_Cork" xlink:href="#censusPath_Cork" id="y1946_Cork"/><use href="#censusPath_Limerick" xlink:href="#censusPath_Limerick" id="y1946_Limerick"/><use href="#censusPath_Clare" xlink:href="#censusPath_Clare" id="y1946_Clare"/><use href="#censusPath_Carlow" xlink:href="#censusPath_Carlow" id="y1946_Carlow"/><use href="#censusPath_Kilkenny" xlink:href="#censusPath_Kilkenny" id="y1946_Kilkenny"/><use href="#censusPath_Laois" xlink:href="#censusPath_Laois" id="y1946_Laois"/><use href="#censusPath_Tipperary" xlink:href="#censusPath_Tipperary" id="y1946_Tipperary"/><use href="#censusPath_Meath" xlink:href="#censusPath_Meath" id="y1946_Meath"/><use href="#censusPath_Kildare" xlink:href="#censusPath_Kildare" id="y1946_Kildare"/><use href="#censusPath_Cavan" xlink:href="#censusPath_Cavan" id="y1946_Cavan"/><use href="#censusPath_Leitrim" xlink:href="#censusPath_Leitrim" id="y1946_Leitrim"/><use href="#censusPath_Sligo" xlink:href="#censusPath_Sligo" id="y1946_Sligo"/><use href="#censusPath_Roscommon" xlink:href="#censusPath_Roscommon" id="y1946_Roscommon"/><use href="#censusPath_Galway" xlink:href="#censusPath_Galway" id="y1946_Galway"/><use href="#censusPath_Longford" xlink:href="#censusPath_Longford" id="y1946_Longford"/><use href="#censusPath_Westmeath" xlink:href="#censusPath_Westmeath" id="y1946_Westmeath"/><use href="#censusPath_Offaly" xlink:href="#censusPath_Offaly" id="y1946_Offaly"/><use href="#censusPath_Mayo" xlink:href="#censusPath_Mayo" id="y1946_Mayo"/></g><g transform="translate(0,-500)" style="display:inline" id="y1946_regionBorders"><use href="#censusRegionOutline_restLeinster" xlink:href="#censusRegionOutline_restLeinster"/><use href="#censusRegionOutline_restMunster" xlink:href="#censusRegionOutline_restMunster"/><use href="#censusRegionOutline_connacht" xlink:href="#censusRegionOutline_connacht"/><use href="#censusRegionOutline_ulsterPart" xlink:href="#censusRegionOutline_ulsterPart"/></g><g style="display:inline" id="y1946_layer6"/></svg></div></div>
   </div>
   <div id="censusDetailPost" class="censusDetail">
-    <p style="font-size:13px;color:#8a7a63" id="i18n-census-detail-hint-post">Clicca una contea o citt&agrave; su una delle tre mappe per vedere il dettaglio di quella macro-area.</p>
+    <p style="font-size:13px;color:#776955" id="i18n-census-detail-hint-post">Clicca una contea o citt&agrave; su una delle tre mappe per vedere il dettaglio di quella macro-area.</p>
   </div>
   </div>
   <h3 class="sec" style="margin-top:34px" id="i18n-census-trend-h3">Andamento della popolazione italiana in Irlanda, 1891&ndash;1946</h3>
   <div id="censusCombinedChart"></div>
-  <p style="font-size:11px;color:#8a7a63;margin-top:18px" id="i18n-census-boundaries"><span id="i18n-census-boundaries-a">Confini delle contee tradizionali: derivati da</span>
+  <p style="font-size:11px;color:#776955;margin-top:18px" id="i18n-census-boundaries"><span id="i18n-census-boundaries-a">Confini delle contee tradizionali: derivati da</span>
   <a class="pl" onclick="window.open('https://commons.wikimedia.org/wiki/File:Ireland_trad_counties_blank.svg','_blank')">Ireland trad counties blank.svg</a>,
   <span id="i18n-census-boundaries-b">Wikimedia Commons (CC BY-SA 3.0), basato su dati Ordnance Survey Ireland / Ordnance Survey Northern Ireland opendata.</span></p>
   </div>
@@ -621,10 +622,10 @@ img, svg, canvas { max-width:100%; }
 <div class="tab" id="tab-locations">
   <p style="font-size:13.5px" id="i18n-loc-intro"></p>
   <div class="controls" id="locControls">
-    <select id="locCountry"></select>
-    <select id="locRegion"></select>
-    <select id="locCity"></select>
-    <input type="text" id="locQ" placeholder="cerca un indirizzo" style="min-width:220px">
+    <select id="locCountry" aria-label="Filter places by country" data-i18n-aria="Filtra i luoghi per paese"></select>
+    <select id="locRegion" aria-label="Filter places by region or county" data-i18n-aria="Filtra i luoghi per regione o contea"></select>
+    <select id="locCity" aria-label="Filter places by town" data-i18n-aria="Filtra i luoghi per citta'"></select>
+    <input type="text" id="locQ" aria-label="Search for an address" data-i18n-aria="Cerca un indirizzo" placeholder="Search for an address" style="min-width:220px">
     <label class="fchk"><input type="checkbox" id="locOnlyMissing"> <span id="locMissLbl"></span></label>
     <span id="locCount" style="font-size:12px;color:var(--ink-soft)"></span>
   </div>
@@ -658,7 +659,7 @@ img, svg, canvas { max-width:100%; }
     <label class="fchk" style="display:inline-block;margin-right:8px"><input type="checkbox" class="fontiAgeChk" value="60-80" checked> 60-80</label>
     <label class="fchk" style="display:inline-block"><input type="checkbox" class="fontiAgeChk" value="&gt;80" checked> &gt;80</label>
   </div>
-  <p style="font-size:11px;color:#8a7a63;margin:2px 0 6px 0" id="i18n-fonti-age-hint">Il filtro per et&agrave; vale solo per 1891, 1901, 1911 e per &ldquo;Tutti&rdquo;: i rapporti del 1926-1946 distinguono solo per sesso, e a livello di macro-area (non contea per contea).</p>
+  <p style="font-size:11px;color:#776955;margin:2px 0 6px 0" id="i18n-fonti-age-hint">Il filtro per et&agrave; vale solo per 1891, 1901, 1911 e per &ldquo;Tutti&rdquo;: i rapporti del 1926-1946 distinguono solo per sesso, e a livello di macro-area (non contea per contea).</p>
   <div id="fontiTableWrap" style="margin-top:14px"></div>
 </div>
 
@@ -674,7 +675,7 @@ img, svg, canvas { max-width:100%; }
     <label class="fchk" style="display:inline-block;margin-right:8px"><input type="radio" name="elenchiYear" value="1911" checked> 1911</label>
     <label class="fchk" style="display:inline-block;margin-right:18px"><input type="radio" name="elenchiYear" value="1926"> 1926</label>
   </div>
-  <p style="font-size:11.5px;color:#8a7a63;margin:0 0 12px 0" id="i18n-elenchi-whyyears">
+  <p style="font-size:11.5px;color:#776955;margin:0 0 12px 0" id="i18n-elenchi-whyyears">
   Perch&eacute; solo questi tre anni? Gli originali dei censimenti irlandesi ottocenteschi sono quasi tutti perduti: i
   moduli del 1821-1851 furono avviati al macero durante la Prima guerra mondiale per carenza di carta, quelli del 1861 e
   1871 furono distrutti per ordine di governo subito dopo la spoglio, e quelli del 1881 e 1891 sono andati distrutti
@@ -692,7 +693,7 @@ img, svg, canvas { max-width:100%; }
   <div class="censusControls">
     <label class="fchk" style="display:inline-block;margin-right:16px"><input type="radio" name="elenchiScope" value="national" checked> <span id="i18n-elenchi-national">Tutta l'Irlanda</span></label>
     <label class="fchk" style="display:inline-block;margin-right:8px"><input type="radio" name="elenchiScope" value="county"> <span id="i18n-elenchi-percounty">Per contea:</span></label>
-    <select id="elenchiCountySel" disabled style="min-width:190px"></select>
+    <select id="elenchiCountySel" aria-label="Filter lists by county" data-i18n-aria="Filtra gli elenchi per contea" disabled style="min-width:190px"></select>
   </div>
 
   <div id="elenchiSummary" style="margin:16px 0"></div>
@@ -713,7 +714,7 @@ img, svg, canvas { max-width:100%; }
     <div class="tourBtns"><button class="tourBtn2" id="tourPrev"></button><button class="tourBtn2 primary" id="tourNext"></button></div>
   </div>
 </div>
-<div id="lightbox" onclick="this.style.display='none'"><img id="lightboxImg" src=""></div>
+<div id="lightbox" onclick="this.style.display='none'"><img id="lightboxImg" alt=""></div>
 <div id="bootScreen" role="status" aria-live="polite">
   <div class="bootBox">
     <div class="bootTitle">Italians in Ireland</div>
