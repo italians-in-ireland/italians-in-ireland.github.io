@@ -4097,7 +4097,7 @@ const STATIC_I18N = {
 };
 
 function applyStaticI18n(){
-          /*ARIALABELS*/
+  /*ARIALABELS*/
   document.querySelectorAll("[data-i18n-aria]").forEach(function(el){
     if(!el.dataset.ariaEn) el.dataset.ariaEn = el.getAttribute("aria-label") || "";
     el.setAttribute("aria-label", LANG === "en" ? el.dataset.ariaEn : el.dataset.i18nAria);
