@@ -1,0 +1,12 @@
+# Normalizza le fini riga nel repository (LF), qualunque sia il sistema
+# su cui gira la ricostruzione. Senza questo, una build su Windows fa
+# risultare "cambiate" tutte le righe di index.html e app.js.
+* text=auto eol=lf
+
+# I binari non vanno toccati
+*.jpg  binary
+*.jpeg binary
+*.png  binary
+*.woff2 binary
+*.woff binary
+*.ico  binary
