@@ -79,7 +79,6 @@ nav { display:flex; gap:0; border-top:1px solid var(--line); justify-content:cen
 .mselOpt:hover { background:var(--paper-deep); }
 .mselOpt.sel { background:var(--accent-soft); font-weight:bold; }
 .mselOpt.mselAction { font-size:12px; color:var(--ink-soft); border-bottom:1px solid var(--line); }
-.histStyleTiles { filter: url(#histDuotone); }
 .treeBox { cursor:pointer; }
 .treeBoxRect { fill:var(--card); stroke-width:1.6; }
 .treeBoxTitle { font-family:var(--font-display); font-size:12px; fill:var(--ink); font-weight:600; }
@@ -290,16 +289,6 @@ img, svg, canvas { max-width:100%; }
 </style>
 </head>
 <body>
-<svg width="0" height="0" style="position:absolute" aria-hidden="true">
-  <filter id="histDuotone" color-interpolation-filters="sRGB">
-    <feColorMatrix type="matrix" values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0"/>
-    <feComponentTransfer>
-      <feFuncR type="table" tableValues="0.282 0.953"/>
-      <feFuncG type="table" tableValues="0.251 0.922"/>
-      <feFuncB type="table" tableValues="0.200 0.871"/>
-    </feComponentTransfer>
-  </filter>
-</svg>
 <header>
   <div class="headerActions">
     <button id="faqBtn" class="headerBtn" title="FAQ" onclick="openFaq()">FAQ</button>
@@ -397,7 +386,7 @@ img, svg, canvas { max-width:100%; }
       <h3 id="i18n-colo-h3" style="margin-top:0;">Come citare, usare e correggere questo sito</h3>
       <p id="i18n-colo-cite"><b>Citazione</b> &mdash; Luca Bertolani Azeredo, <i>Italians in Ireland: A Prosopographical Database, 1850&ndash;2026</i>, https://italians-in-ireland.github.io (consultato il <span class="colDate"></span>).</p>
       <p id="i18n-colo-living"><b>Persone viventi</b> &mdash; Il database ricostruisce soprattutto vite concluse, ma alcune schede arrivano a decenni recenti e possono riguardare persone viventi o scomparse da poco. Le informazioni provengono da fonti pubbliche: censimenti aperti alla consultazione, registri di stato civile, necrologi, lapidi. Se compari in una scheda, o vi compare un tuo familiare, e vuoi che un dato sia corretto o rimosso, <a href="https://irishhistorians.ie/members/lucaba/" target="_blank" rel="noopener">scrivimi</a> e provvedo.</p>
-      <p id="i18n-colo-tiles"><b>Mappe e collegamenti esterni</b> &mdash; Le mappe di questo sito disegnano i luoghi e le tessere storiche sopra una mappa di sfondo fornita dal servizio CARTO, su dati OpenStreetMap. Aprendo una mappa il tuo browser si collega a quel servizio, che riceve il tuo indirizzo IP: e&rsquo; l&rsquo;unico collegamento verso terzi che la consultazione comporta. Tutto il resto &mdash; testi, fotografie, tessere storiche, caratteri tipografici, codice &mdash; e&rsquo; servito da questo sito. Non ci sono statistiche, non ci sono traccianti e non vengono usati cookie. La cartografia storica sovrapposta alle mappe proviene dalle collezioni della <a href="https://maps.nls.uk/" target="_blank" rel="noopener">National Library of Scotland</a>, riprodotta con il loro permesso e distribuita con licenza Creative Commons Attribution.</p>
+      <p id="i18n-colo-tiles"><b>Mappe, fonti e collegamenti esterni</b> &mdash; Le mappe di questo sito sono servite interamente da qui: aprendole non viene contattato alcun servizio esterno, e il sito non usa statistiche, traccianti n&eacute; cookie. Il fondo geografico &egrave; disegnato a partire da tre fonti: la linea di costa e i confini delle contee da <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth</a>, di pubblico dominio; i corsi d&rsquo;acqua e le masse boschive da <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>, distribuiti con licenza ODbL e qui ridistribuiti alle stesse condizioni; il rilievo da EU-DEM, prodotto con dati Copernicus finanziati dall&rsquo;Unione Europea, e per l&rsquo;Irlanda del Nord da dati altimetrici &copy; Environment Agency. Le fasce altimetriche mostrano dove il terreno si alza, non quanto: alla risoluzione impiegata le vette risultano pi&ugrave; basse del vero. La cartografia storica sovrapposta alle mappe proviene dalle collezioni della National Library of Scotland ed &egrave; distribuita con licenza Creative Commons Attribution, alla condizione che se ne riporti testualmente la formula di attribuzione: &laquo;<a href="https://maps.nls.uk/" target="_blank" rel="noopener">Reproduced with the permission of the National Library of Scotland</a>&raquo;.</p>
       <p id="i18n-colo-lic"><b>Licenza</b> &mdash; I testi e le ricostruzioni genealogiche di questo sito sono distribuiti con licenza <a href="https://creativecommons.org/licenses/by-nc/4.0/deed.it" target="_blank" rel="noopener">Creative Commons BY-NC 4.0</a>: puoi riutilizzarli per scopi non commerciali citando l&rsquo;autore e il sito. Le fotografie sono escluse dalla licenza e restano dei rispettivi proprietari: per riprodurle serve un&rsquo;autorizzazione. I documenti originali citati (censimenti, atti di stato civile) sono di dominio pubblico e restano consultabili alle fonti collegate a ogni scheda.</p>
     </div>
     <!--/COLOPHON-->
@@ -736,7 +725,7 @@ img, svg, canvas { max-width:100%; }
       .then(function(j){ window.__SITEDATA__[f[0]]=j; step(); });
   })).then(function(){
     var s=document.createElement("script");
-    s.src="app.js";
+    s.src="app.js?v=e8205e7e";
     s.onload=function(){ step(); var b=document.getElementById("bootScreen"); if(b) b.parentNode.removeChild(b); };
     s.onerror=function(){ fail("app.js"); };
     document.body.appendChild(s);

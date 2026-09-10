@@ -607,6 +607,136 @@ function translateEventPhrase(s){
 // Downloaded once for the exact locations in this database (see HIST_TILES above) and embedded
 // as small georeferenced JPEG overlays, so the map favours the period look Luca wanted without
 // depending on a live connection to NLS's tile servers or covering areas we have no data for.
+/*VECTORBASE*/
+// Fondo cartografico vettoriale: sostituisce le tessere di CARTO.
+// Costa e contee da Natural Earth (pubblico dominio), acque e boschi da
+// OpenStreetMap (ODbL), rilievo da EU-DEM/Copernicus. Nessuna richiesta
+// verso terzi: il dato sta in data/basemap.json, dentro questo sito.
+var BASE_ATTR = 'Fondo: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth</a>'
+  + ' &middot; acque e boschi &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> (ODbL)'
+  + ' &middot; rilievo: EU-DEM, Copernicus';
+// La National Library of Scotland concede le immagini con licenza CC-BY a
+// patto che questa formula compaia testualmente ovunque le immagini siano
+// riusate, e che nelle pubblicazioni online l'attribuzione contenga un
+// collegamento al loro sito. Una sola costante, usata da tutte le mappe.
+var NLS_ATTR = 'Historical mapping: <a href="https://maps.nls.uk/" target="_blank" rel="noopener">Reproduced with the permission of the National Library of Scotland</a>';
+var BASE_TINTE = ['#f4ecd9','#ece1c6','#e2d5b2','#d6c69c'];
+var BASE_LIVELLI = ['100','200','300','500'];
+var __baseAttesa = null;
+function baseData(){
+  if(!__baseAttesa){
+    __baseAttesa = fetch('data/basemap.json').then(function(r){ return r.json(); });
+  }
+  return __baseAttesa;
+}
+// Sotto questo ingrandimento la carta storica non e' ancora leggibile e il
+// fondo disegnato serve; sopra, la carta d'epoca porta i propri confini e le
+// proprie acque, e i nostri si ritirano per non litigare con essa.
+var BASE_ZOOM_RITIRO = 15;
+function buildVectorBase(mappa){
+  // Le tessere fornivano implicitamente a Leaflet maxZoom: senza un livello
+  // massimo la mappa non sa fin dove ingrandire e si ferma con un errore.
+  if(mappa && mappa.options){
+    if(mappa.options.maxZoom === undefined || mappa.options.maxZoom === null) mappa.options.maxZoom = 19;
+    if(mappa.options.minZoom === undefined || mappa.options.minZoom === null) mappa.options.minZoom = 5;
+  }
+  var g = L.layerGroup();
+  g.getAttribution = function(){ return BASE_ATTR; };
+  var sopra = [];   // strati che si ritirano ad alto ingrandimento
+  // Le tessere di CARTO stavano nel pannello delle tessere, sotto le carte
+  // storiche. Disegnati nel pannello delle sovrapposizioni, e aggiunti dopo
+  // di esse perche' i contorni arrivano da una fetch, questi poligoni
+  // coprirebbero la cartografia della National Library of Scotland: il
+  // riempimento dell'isola e' opaco. Vanno quindi in un pannello loro, fra
+  // le tessere (200) e le sovrapposizioni (400).
+  var pane;
+  if(mappa && mappa.createPane){
+    pane = 'fondoVettoriale';
+    if(!mappa.getPane(pane)){
+      var pp = mappa.createPane(pane);
+      pp.style.zIndex = 250;
+      pp.style.pointerEvents = 'none';
+    }
+  }
+  // Un livello Leaflet per forma vorrebbe dire 4.401 elementi <path>, ciascuno
+  // con i propri ascoltatori del mouse e il proprio ritaglio a ogni spostamento
+  // della carta: il riquadro resta grigio per decine di secondi mentre il
+  // browser li mette insieme, e ogni mini-mappa di profilo li rifabbrica tutti.
+  // Ogni strato diventa quindi una sola geometria multipla, e nessuno di essi
+  // risponde al mouse: il fondo si guarda, non si clicca.
+  function opz(extra){
+    var o = {interactive:false, bubblingMouseEvents:false, pane:pane};
+    for(var k in extra){ o[k] = extra[k]; }
+    return o;
+  }
+  baseData().then(function(d){
+    function anello(c){ return c.map(function(p){ return [p[1], p[0]]; }); }
+    // isola e contee arrivano come elenchi di poligoni, ciascuno coi suoi anelli
+    function poligoni(elenco){
+      var out = [];
+      (elenco||[]).forEach(function(f){ (f.p||[]).forEach(function(p){ out.push(p.map(anello)); }); });
+      return out;
+    }
+    var isola = poligoni(d.island);
+    if(isola.length) L.polygon(isola, opz({stroke:false, fillColor:'#fbf7ee', fillOpacity:1})).addTo(g);
+    // le fasce di quota si sovrappongono l'una all'altra: con la regola
+    // pari-dispari un anello dentro un altro diventerebbe un buco, con
+    // nonzero resta pieno come quando ognuno era un poligono a se'.
+    BASE_LIVELLI.forEach(function(lv, i){
+      var fascia = ((d.relief||{})[lv]||[]).map(function(r){ return [anello(r)]; });
+      if(fascia.length) L.polygon(fascia, opz({stroke:false, fillColor:BASE_TINTE[i], fillOpacity:1, fillRule:'nonzero'})).addTo(g);
+    });
+    var boschi = (d.woods||[]).map(function(r){ return [anello(r)]; });
+    if(boschi.length) L.polygon(boschi, opz({stroke:false, fillColor:'#776955', fillOpacity:0.16, fillRule:'nonzero'})).addTo(g);
+    // un lago puo' arrivare come anello singolo o come lista di anelli
+    function anelli(r){ return (typeof r[0][0] === 'number') ? [anello(r)] : r.map(anello); }
+    var laghi = (d.lakes||[]).map(anelli);
+    if(laghi.length) sopra.push(L.polygon(laghi, opz({stroke:false, fillColor:'#eadfc2', fillOpacity:1})).addTo(g));
+    var fiumi = (d.rivers||[]).map(anello);
+    if(fiumi.length) sopra.push(L.polyline(fiumi, opz({color:'#eadfc2', weight:1.2, opacity:1})).addTo(g));
+    var contee = poligoni(d.counties);
+    if(contee.length) sopra.push(L.polygon(contee, opz({color:'#cdbf9d', weight:0.7, fill:false})).addTo(g));
+    if(isola.length) L.polygon(isola, opz({color:'#5c4d38', weight:1.2, fill:false})).addTo(g);
+    if(mappa){ aggiornaRitiro(); mappa.on('zoomend', aggiornaRitiro); }
+  }).catch(function(e){ if(window.console) console.warn('fondo vettoriale non caricato:', e); });
+  function aggiornaRitiro(){
+    var giu = mappa && mappa.getZoom() >= BASE_ZOOM_RITIRO;
+    sopra.forEach(function(l){
+      if(l.setStyle) l.setStyle({opacity: giu?0:1, fillOpacity: giu?0:(l.options.fill===false?0:1)});
+    });
+  }
+  return g;
+}
+
+// La mini-mappa del profilo e quella dei luoghi chiedevano tutte le tessere
+// storiche di un riquadro largo 0,15 gradi: 3.162 immagini montate per
+// mostrarne due, e altrettante richieste al server a ogni scheda aperta.
+// Qui si montano solo quelle che toccano l'inquadratura, e si rifanno i conti
+// quando la carta si sposta, come gia' faceva la mappa grande.
+function buildHistViewport(mappa, zoomMinimo){
+  var g = L.layerGroup();
+  var vivi = new Array(HIST_TILES.length).fill(null);
+  function aggiorna(){
+    try {
+      var attivo = mappa.getZoom() >= (zoomMinimo || 0);
+      var b = mappa.getBounds().pad(0.25);
+      var s = b.getSouth(), w = b.getWest(), n = b.getNorth(), e = b.getEast();
+      HIST_TILES.forEach(function(t, i){
+        var dentro = attivo && !(t.b[2] < s || t.b[0] > n || t.b[3] < w || t.b[1] > e);
+        if(dentro && !vivi[i]){
+          vivi[i] = L.imageOverlay(t.u, [[t.b[0],t.b[1]],[t.b[2],t.b[3]]], {opacity:1, attribution:NLS_ATTR}).addTo(g);
+        } else if(!dentro && vivi[i]){
+          g.removeLayer(vivi[i]); vivi[i] = null;
+        }
+      });
+    } catch(err) { /* la carta non ha ancora un centro: ci ripensiamo al primo movimento */ }
+  }
+  mappa.on('moveend zoomend load', aggiorna);
+  aggiorna();
+  return g;
+}
+/*END VECTORBASE*/
+
 function buildHistOverlay(filterBounds){
   // filterBounds, if given, is [south,west,north,east]; only tiles intersecting it are
   // rendered. Used by the person mini-map so opening a profile doesn't have to instantiate
@@ -617,7 +747,7 @@ function buildHistOverlay(filterBounds){
       const [s,w,n,e]=t.b, [fs,fw,fn,fe]=filterBounds;
       if(n<fs || s>fn || e<fw || w>fe) return;
     }
-    L.imageOverlay(t.u, [[t.b[0],t.b[1]],[t.b[2],t.b[3]]], {opacity:1, attribution:"Historical mapping reproduced with the permission of the <a href=\"https://maps.nls.uk/\" target=\"_blank\" rel=\"noopener\">National Library of Scotland</a>"}).addTo(g);
+    L.imageOverlay(t.u, [[t.b[0],t.b[1]],[t.b[2],t.b[3]]], {opacity:1, attribution:NLS_ATTR}).addTo(g);
   });
   return g;
 }
@@ -1532,9 +1662,8 @@ window.openLoc = function(note){
 };
 function L2map(L){
   var m = window.L.map("locmap").setView([L.lat, L.lng], 16);
-  window.L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-    { attribution: "&copy; OSM &copy; CARTO", className: "histStyleTiles" }).addTo(m);
-  try { buildHistOverlay([L.lat - 0.05, L.lng - 0.05, L.lat + 0.05, L.lng + 0.05]).addTo(m); } catch (e) {}
+  buildVectorBase(m).addTo(m);
+  try { buildHistViewport(m, 13).addTo(m); } catch (e) {}
   window.L.marker([L.lat, L.lng]).addTo(m).bindPopup("<b>" + esc(L.title) + "</b>").openPopup();
   return m;
 }
@@ -1613,10 +1742,10 @@ window.openPerson=function(key){
   if(geo.length){
     setTimeout(()=>{
       pmapInstance=L.map("pmap");
-      L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{attribution:"&copy; OSM &copy; CARTO",className:"histStyleTiles"}).addTo(pmapInstance);
+      buildVectorBase(pmapInstance).addTo(pmapInstance);
       const geoLats=geo.map(o=>o.e.lat), geoLngs=geo.map(o=>o.e.lng);
       const pad=0.15;
-      buildHistOverlay([Math.min(...geoLats)-pad, Math.min(...geoLngs)-pad, Math.max(...geoLats)+pad, Math.max(...geoLngs)+pad]).addTo(pmapInstance);
+      buildHistViewport(pmapInstance, 13).addTo(pmapInstance);
       personMoves(p).forEach(mv=>{
         const col=moveYearColor(mv.y);
         const pts=moveBezier(mv.from,mv.to,0.15);
@@ -1666,7 +1795,7 @@ let bigmap=null, cluster=null, allMarkers=[], allMoves=[], moveLayer=null, histO
 function initBigMap(){
   if(bigmap){ setTimeout(()=>bigmap.invalidateSize(),80); return; }
   bigmap=L.map("bigmap").setView([53.2,-6.8],7);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{attribution:"&copy; OSM &copy; CARTO",className:"histStyleTiles"}).addTo(bigmap);
+  buildVectorBase(bigmap).addTo(bigmap);
   cluster=L.markerClusterGroup({chunkedLoading:true, maxClusterRadius:46});
   bigmap.addLayer(cluster);
   moveLayer=L.layerGroup().addTo(bigmap);
@@ -1684,7 +1813,7 @@ function initBigMap(){
       const ok = !(t.b[2]<bs || t.b[0]>bn || t.b[3]<bw || t.b[1]>be);
       const has = !!histLayers[idx];
       if(ok && !has){
-        histLayers[idx]=L.imageOverlay(t.u, [[t.b[0],t.b[1]],[t.b[2],t.b[3]]], {opacity:1});
+        histLayers[idx]=L.imageOverlay(t.u, [[t.b[0],t.b[1]],[t.b[2],t.b[3]]], {opacity:1, attribution:NLS_ATTR});
         histOverlayGroup.addLayer(histLayers[idx]);
       } else if(!ok && has){
         histOverlayGroup.removeLayer(histLayers[idx]);
@@ -4015,7 +4144,7 @@ const STATIC_I18N = {
   "i18n-colo-h3": "How to cite, reuse and correct this site",
   "i18n-colo-cite": "<b>Citation</b> &mdash; Luca Bertolani Azeredo, <i>Italians in Ireland: A Prosopographical Database, 1850&ndash;2026</i>, https://italians-in-ireland.github.io (accessed <span class=\"colDate\"></span>).",
   "i18n-colo-living": "<b>Living people</b> &mdash; The database is above all a record of lives that have ended, but some profiles reach into recent decades and may concern people who are still alive or who died recently. The information comes from public sources: censuses open to consultation, civil registration records, obituaries and gravestones. If you appear in a profile, or a relative of yours does, and you would like something corrected or removed, <a href=\"https://irishhistorians.ie/members/lucaba/\" target=\"_blank\" rel=\"noopener\">write to me</a> and I will see to it.",
-  "i18n-colo-tiles": "<b>Maps and external connections</b> &mdash; The maps on this site draw places and historical tiles over a base map supplied by the CARTO service, built on OpenStreetMap data. When you open a map your browser connects to that service, which receives your IP address: it is the only third-party connection consulting this site involves. Everything else &mdash; text, photographs, historical tiles, typefaces, code &mdash; is served from this site. There are no analytics, no trackers and no cookies. The historical mapping overlaid on the maps comes from the collections of the <a href=\"https://maps.nls.uk/\" target=\"_blank\" rel=\"noopener\">National Library of Scotland</a>, reproduced with their permission and made available under a Creative Commons Attribution licence.",
+  "i18n-colo-tiles": "<b>Maps, sources and external connections</b> &mdash; The maps on this site are served entirely from here: opening one contacts no external service, and the site uses no analytics, no trackers and no cookies. The geographical base is drawn from three sources: the coastline and county boundaries from <a href=\"https://www.naturalearthdata.com/\" target=\"_blank\" rel=\"noopener\">Natural Earth</a>, in the public domain; the watercourses and woodland from <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\" rel=\"noopener\">OpenStreetMap</a>, released under the ODbL licence and redistributed here on the same terms; and the relief from EU-DEM, produced using Copernicus data funded by the European Union, with Northern Ireland elevation data &copy; Environment Agency. The elevation bands show where the ground rises, not by how much: at the resolution used, summits read lower than they are. The historical mapping overlaid on the maps comes from the collections of the National Library of Scotland and is made available under a Creative Commons Attribution licence, on condition that its credit line is reproduced verbatim: &ldquo;<a href=\"https://maps.nls.uk/\" target=\"_blank\" rel=\"noopener\">Reproduced with the permission of the National Library of Scotland</a>&rdquo;.",
   "i18n-colo-lic": "<b>Licence</b> &mdash; The texts and genealogical reconstructions on this site are released under a <a href=\"https://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\" rel=\"noopener\">Creative Commons BY-NC 4.0</a> licence: you may reuse them for non-commercial purposes, citing the author and the site. The photographs are excluded from the licence and remain with their owners: reproducing them requires permission. The original records cited (censuses, civil registration) are in the public domain and remain available at the sources linked from every profile.",
   /*END COLOPHON*/
   "i18n-home-h2": "Welcome",
