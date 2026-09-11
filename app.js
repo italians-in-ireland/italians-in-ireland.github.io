@@ -636,10 +636,10 @@ function baseData(){
 // proprie acque, e i nostri si ritirano per non litigare con essa.
 var BASE_ZOOM_RITIRO = 15;
 // Molte schede del database cadono fuori dall'Irlanda (emigrazione): senza
-// un riferimento politico, un punto lontano resta isolato nel grigio. Sotto
-// questo ingrandimento compaiono i confini del mondo; da qui in su si vede
-// gia' il dettaglio delle contee e il mondo si toglierebbe solo di mezzo.
-var WORLD_ZOOM_LIMITE = 6;
+// un riferimento politico, un punto lontano resta isolato nel grigio, a
+// qualunque ingrandimento. I confini del mondo restano percio' sempre
+// visibili: l'Irlanda e' la sola zona con i propri strati dedicati, sempre
+// disegnati sopra di essi, quindi non c'e' conflitto da risolvere.
 function buildVectorBase(mappa){
   // Le tessere fornivano implicitamente a Leaflet maxZoom: senza un livello
   // massimo la mappa non sa fin dove ingrandire e si ferma con un errore.
@@ -651,7 +651,6 @@ function buildVectorBase(mappa){
   var g = L.layerGroup();
   g.getAttribution = function(){ return BASE_ATTR; };
   var sopra = [];   // strati che si ritirano ad alto ingrandimento
-  var mondo = [];   // confini politici: si vedono solo sotto WORLD_ZOOM_LIMITE
   // Le tessere di CARTO stavano nel pannello delle tessere, sotto le carte
   // storiche. Disegnati nel pannello delle sovrapposizioni, e aggiunti dopo
   // di esse perche' i contorni arrivano da una fetch, questi poligoni
@@ -690,8 +689,8 @@ function buildVectorBase(mappa){
     // (sotto, piu' avanti) resta sempre sopra alla loro sagoma piu' grezza.
     var terreMondo = poligoni(d.world);
     if(terreMondo.length){
-      mondo.push(L.polygon(terreMondo, opz({stroke:false, fillColor:'#e6dfc9', fillOpacity:1, fillRule:'nonzero'})).addTo(g));
-      mondo.push(L.polygon(terreMondo, opz({color:'#b3a37c', weight:0.6, fill:false})).addTo(g));
+      L.polygon(terreMondo, opz({stroke:false, fillColor:'#e6dfc9', fillOpacity:1, fillRule:'nonzero'})).addTo(g);
+      L.polygon(terreMondo, opz({color:'#b3a37c', weight:0.6, fill:false})).addTo(g);
     }
     var isola = poligoni(d.island);
     if(isola.length) L.polygon(isola, opz({stroke:false, fillColor:'#fbf7ee', fillOpacity:1})).addTo(g);
@@ -714,22 +713,14 @@ function buildVectorBase(mappa){
     if(contee.length) sopra.push(L.polygon(contee, opz({color:'#cdbf9d', weight:0.7, fill:false})).addTo(g));
     if(isola.length) L.polygon(isola, opz({color:'#5c4d38', weight:1.2, fill:false})).addTo(g);
     if(mappa){
-      aggiornaRitiro(); aggiornaMondo();
-      mappa.on('zoomend', aggiornaRitiro); mappa.on('zoomend', aggiornaMondo);
+      aggiornaRitiro();
+      mappa.on('zoomend', aggiornaRitiro);
     }
   }).catch(function(e){ if(window.console) console.warn('fondo vettoriale non caricato:', e); });
   function aggiornaRitiro(){
     var giu = mappa && mappa.getZoom() >= BASE_ZOOM_RITIRO;
     sopra.forEach(function(l){
       if(l.setStyle) l.setStyle({opacity: giu?0:1, fillOpacity: giu?0:(l.options.fill===false?0:1)});
-    });
-  }
-  // Il mondo e' l'opposto: compare quando ci si allontana, sparisce quando
-  // si torna sul dettaglio irlandese.
-  function aggiornaMondo(){
-    var su = mappa && mappa.getZoom() < WORLD_ZOOM_LIMITE;
-    mondo.forEach(function(l){
-      if(l.setStyle) l.setStyle({opacity: su?1:0, fillOpacity: su?(l.options.fill===false?0:1):0});
     });
   }
   return g;
@@ -4171,7 +4162,7 @@ const STATIC_I18N = {
   "i18n-colo-h3": "How to cite, reuse and correct this site",
   "i18n-colo-cite": "<b>Citation</b> &mdash; Luca Bertolani Azeredo, <i>Italians in Ireland: A Prosopographical Database, 1850&ndash;2026</i>, https://italians-in-ireland.github.io (accessed <span class=\"colDate\"></span>).",
   "i18n-colo-living": "<b>Living people</b> &mdash; The database is above all a record of lives that have ended, but some profiles reach into recent decades and may concern people who are still alive or who died recently. The information comes from public sources: censuses open to consultation, civil registration records, obituaries and gravestones. If you appear in a profile, or a relative of yours does, and you would like something corrected or removed, <a href=\"https://irishhistorians.ie/members/lucaba/\" target=\"_blank\" rel=\"noopener\">write to me</a> and I will see to it.",
-  "i18n-colo-tiles": "<b>Maps, sources and external connections</b> &mdash; The maps on this site are served entirely from here: opening one contacts no external service, and the site uses no analytics, no trackers and no cookies. The geographical base is drawn from three sources: the coastline, the Irish county boundaries and, below a certain zoom level, the political borders of other countries, from <a href=\"https://www.naturalearthdata.com/\" target=\"_blank\" rel=\"noopener\">Natural Earth</a>, in the public domain &mdash; the world borders are today's, while the database spans 1850&ndash;2026: some states of that period no longer exist with those borders; the watercourses and woodland from <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\" rel=\"noopener\">OpenStreetMap</a>, released under the ODbL licence and redistributed here on the same terms, in <a href=\"data/basemap.json\">basemap.json</a>, the derived database this site uses; and the relief from EU-DEM, produced using Copernicus data funded by the European Union, with Northern Ireland elevation data &copy; Environment Agency. The elevation bands show where the ground rises, not by how much: at the resolution used, summits read lower than they are. The historical mapping overlaid on the maps comes from the collections of the National Library of Scotland and is made available under a Creative Commons Attribution licence, on condition that its credit line is reproduced verbatim: &ldquo;<a href=\"https://maps.nls.uk/\" target=\"_blank\" rel=\"noopener\">Reproduced with the permission of the National Library of Scotland</a>&rdquo;.",
+  "i18n-colo-tiles": "<b>Maps, sources and external connections</b> &mdash; The maps on this site are served entirely from here: opening one contacts no external service, and the site uses no analytics, no trackers and no cookies. The geographical base is drawn from three sources: the coastline, the Irish county boundaries and the political borders of other countries, from <a href=\"https://www.naturalearthdata.com/\" target=\"_blank\" rel=\"noopener\">Natural Earth</a>, in the public domain &mdash; the world borders are today's, while the database spans 1850&ndash;2026: some states of that period no longer exist with those borders; the watercourses and woodland from <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\" rel=\"noopener\">OpenStreetMap</a>, released under the ODbL licence and redistributed here on the same terms, in <a href=\"data/basemap.json\">basemap.json</a>, the derived database this site uses; and the relief from EU-DEM, produced using Copernicus data funded by the European Union, with Northern Ireland elevation data &copy; Environment Agency. The elevation bands show where the ground rises, not by how much: at the resolution used, summits read lower than they are. The historical mapping overlaid on the maps comes from the collections of the National Library of Scotland and is made available under a Creative Commons Attribution licence, on condition that its credit line is reproduced verbatim: &ldquo;<a href=\"https://maps.nls.uk/\" target=\"_blank\" rel=\"noopener\">Reproduced with the permission of the National Library of Scotland</a>&rdquo;.",
   "i18n-colo-lic": "<b>Licence</b> &mdash; The texts and genealogical reconstructions on this site are released under a <a href=\"https://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\" rel=\"noopener\">Creative Commons BY-NC 4.0</a> licence: you may reuse them for non-commercial purposes, citing the author and the site. The photographs are excluded from the licence and remain with their owners: reproducing them requires permission. The original records cited (censuses, civil registration) are in the public domain and remain available at the sources linked from every profile.",
   /*END COLOPHON*/
   "i18n-home-h2": "Welcome",
