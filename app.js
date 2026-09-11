@@ -609,12 +609,13 @@ function translateEventPhrase(s){
 // depending on a live connection to NLS's tile servers or covering areas we have no data for.
 /*VECTORBASE*/
 // Fondo cartografico vettoriale: sostituisce le tessere di CARTO.
-// Costa, contee e confini politici mondiali da Natural Earth (pubblico
-// dominio; i confini mondiali sono quelli odierni, dichiarati come tali
-// nel colofone), acque e boschi da OpenStreetMap (ODbL), rilievo da
-// EU-DEM/Copernicus. Nessuna richiesta verso terzi: il dato sta in
-// data/basemap.json, dentro questo sito.
+// Costa e contee irlandesi da Natural Earth (pubblico dominio), resto del
+// mondo da Protomaps/OpenStreetMap (ODbL, vendor/protomaps-leaflet.js +
+// data/mondo.pmtiles), acque e boschi da OpenStreetMap (ODbL), rilievo da
+// EU-DEM/Copernicus. Nessuna richiesta verso terzi: ogni dato sta dentro
+// questo sito.
 var BASE_ATTR = 'Fondo: <a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth</a>'
+  + ' &middot; resto del mondo: <a href="https://protomaps.com/" target="_blank" rel="noopener">Protomaps</a> &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
   + ' &middot; acque e boschi &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> (ODbL)'
   + ' &middot; rilievo: EU-DEM, Copernicus';
 // La National Library of Scotland concede le immagini con licenza CC-BY a
@@ -637,9 +638,14 @@ function baseData(){
 var BASE_ZOOM_RITIRO = 15;
 // Molte schede del database cadono fuori dall'Irlanda (emigrazione): senza
 // un riferimento politico, un punto lontano resta isolato nel grigio, a
-// qualunque ingrandimento. I confini del mondo restano percio' sempre
-// visibili: l'Irlanda e' la sola zona con i propri strati dedicati, sempre
-// disegnati sopra di essi, quindi non c'e' conflitto da risolvere.
+// qualunque ingrandimento. Il fondo Protomaps copre percio' il mondo
+// intero, a qualunque zoom (vedi MONDO_MAXZOOM piu' sotto): l'Irlanda resta
+// la sola zona con i propri strati dedicati, disegnati sopra di esso nello
+// stesso pannello, quindi non c'e' conflitto da risolvere.
+// Il ritaglio .pmtiles copre solo fino a questo zoom: oltre, la libreria
+// riusa e ingrandisce l'ultimo livello disponibile invece di chiedere
+// tasselli che non esistono (altrimenti il fondo sparirebbe di nuovo).
+var MONDO_MAXZOOM = 5;
 function buildVectorBase(mappa){
   // Le tessere fornivano implicitamente a Leaflet maxZoom: senza un livello
   // massimo la mappa non sa fin dove ingrandire e si ferma con un errore.
@@ -650,6 +656,18 @@ function buildVectorBase(mappa){
   }
   var g = L.layerGroup();
   g.getAttribution = function(){ return BASE_ATTR; };
+  // Resto del mondo: pannello di default (le tessere, sotto quello
+  // irlandese), cosi' costa/contee/rilievo restano sempre sopra. window.protomapsL
+  // manca solo se harden_web.py non ha ancora scaricato la libreria: il
+  // fondo Irlanda resta comunque utilizzabile.
+  if(window.protomapsL){
+    protomapsL.leafletLayer({
+      url: 'data/mondo.pmtiles',
+      flavor: 'light',
+      lang: 'it',
+      maxDataZoom: MONDO_MAXZOOM
+    }).addTo(g);
+  }
   var sopra = [];   // strati che si ritirano ad alto ingrandimento
   // Le tessere di CARTO stavano nel pannello delle tessere, sotto le carte
   // storiche. Disegnati nel pannello delle sovrapposizioni, e aggiunti dopo
@@ -684,13 +702,6 @@ function buildVectorBase(mappa){
       var out = [];
       (elenco||[]).forEach(function(f){ (f.p||[]).forEach(function(p){ out.push(p.map(anello)); }); });
       return out;
-    }
-    // confini del mondo: disegnati per primi, cosi' il dettaglio irlandese
-    // (sotto, piu' avanti) resta sempre sopra alla loro sagoma piu' grezza.
-    var terreMondo = poligoni(d.world);
-    if(terreMondo.length){
-      L.polygon(terreMondo, opz({stroke:false, fillColor:'#e6dfc9', fillOpacity:1, fillRule:'nonzero'})).addTo(g);
-      L.polygon(terreMondo, opz({color:'#b3a37c', weight:0.6, fill:false})).addTo(g);
     }
     var isola = poligoni(d.island);
     if(isola.length) L.polygon(isola, opz({stroke:false, fillColor:'#fbf7ee', fillOpacity:1})).addTo(g);
@@ -4162,7 +4173,7 @@ const STATIC_I18N = {
   "i18n-colo-h3": "How to cite, reuse and correct this site",
   "i18n-colo-cite": "<b>Citation</b> &mdash; Luca Bertolani Azeredo, <i>Italians in Ireland: A Prosopographical Database, 1850&ndash;2026</i>, https://italians-in-ireland.github.io (accessed <span class=\"colDate\"></span>).",
   "i18n-colo-living": "<b>Living people</b> &mdash; The database is above all a record of lives that have ended, but some profiles reach into recent decades and may concern people who are still alive or who died recently. The information comes from public sources: censuses open to consultation, civil registration records, obituaries and gravestones. If you appear in a profile, or a relative of yours does, and you would like something corrected or removed, <a href=\"https://irishhistorians.ie/members/lucaba/\" target=\"_blank\" rel=\"noopener\">write to me</a> and I will see to it.",
-  "i18n-colo-tiles": "<b>Maps, sources and external connections</b> &mdash; The maps on this site are served entirely from here: opening one contacts no external service, and the site uses no analytics, no trackers and no cookies. The geographical base is drawn from three sources: the coastline, the Irish county boundaries and the political borders of other countries, from <a href=\"https://www.naturalearthdata.com/\" target=\"_blank\" rel=\"noopener\">Natural Earth</a>, in the public domain &mdash; the world borders are today's, while the database spans 1850&ndash;2026: some states of that period no longer exist with those borders; the watercourses and woodland from <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\" rel=\"noopener\">OpenStreetMap</a>, released under the ODbL licence and redistributed here on the same terms, in <a href=\"data/basemap.json\">basemap.json</a>, the derived database this site uses; and the relief from EU-DEM, produced using Copernicus data funded by the European Union, with Northern Ireland elevation data &copy; Environment Agency. The elevation bands show where the ground rises, not by how much: at the resolution used, summits read lower than they are. The historical mapping overlaid on the maps comes from the collections of the National Library of Scotland and is made available under a Creative Commons Attribution licence, on condition that its credit line is reproduced verbatim: &ldquo;<a href=\"https://maps.nls.uk/\" target=\"_blank\" rel=\"noopener\">Reproduced with the permission of the National Library of Scotland</a>&rdquo;.",
+  "i18n-colo-tiles": "<b>Maps, sources and external connections</b> &mdash; The maps on this site are served entirely from here: opening one contacts no external service, and the site uses no analytics, no trackers and no cookies. The geographical base is drawn from four sources: the coastline and the Irish county boundaries from <a href=\"https://www.naturalearthdata.com/\" target=\"_blank\" rel=\"noopener\">Natural Earth</a>, in the public domain; the political borders of other countries from <a href=\"https://protomaps.com/\" target=\"_blank\" rel=\"noopener\">Protomaps</a>, itself built from <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\" rel=\"noopener\">OpenStreetMap</a> (ODbL licence) &mdash; the world borders are today's, while the database spans 1850&ndash;2026: some states of that period no longer exist with those borders; the watercourses and woodland from <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\" rel=\"noopener\">OpenStreetMap</a>, released under the ODbL licence and redistributed here on the same terms, in <a href=\"data/basemap.json\">basemap.json</a>, the derived database this site uses; and the relief from EU-DEM, produced using Copernicus data funded by the European Union, with Northern Ireland elevation data &copy; Environment Agency. The elevation bands show where the ground rises, not by how much: at the resolution used, summits read lower than they are. The historical mapping overlaid on the maps comes from the collections of the National Library of Scotland and is made available under a Creative Commons Attribution licence, on condition that its credit line is reproduced verbatim: &ldquo;<a href=\"https://maps.nls.uk/\" target=\"_blank\" rel=\"noopener\">Reproduced with the permission of the National Library of Scotland</a>&rdquo;.",
   "i18n-colo-lic": "<b>Licence</b> &mdash; The texts and genealogical reconstructions on this site are released under a <a href=\"https://creativecommons.org/licenses/by-nc/4.0/\" target=\"_blank\" rel=\"noopener\">Creative Commons BY-NC 4.0</a> licence: you may reuse them for non-commercial purposes, citing the author and the site. The photographs are excluded from the licence and remain with their owners: reproducing them requires permission. The original records cited (censuses, civil registration) are in the public domain and remain available at the sources linked from every profile.",
   /*END COLOPHON*/
   "i18n-home-h2": "Welcome",
